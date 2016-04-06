@@ -1,0 +1,3 @@
+[submodule "android-capture-sdk"]
+	path = android-capture-sdk
+	url = https://ricardo-monadtek@bitbucket.org/onfido-mobile/android-capture-sdk.git

@@ -1,1 +1,3 @@
-include ':app'
+include ':app', ':java-api-client', ':capture-sdk-android'
+project(':capture-sdk-android').projectDir = new File('android-capture-sdk/capture-sdk-android')
+project(':java-api-client').projectDir = new File('android-capture-sdk/java-api-client')
