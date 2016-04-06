@@ -1,15 +1,20 @@
-package com.onfido.android.app.sample;
+package com.onfido.sampleapp;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.onfido.android.app.sample.R;
+import com.onfido.android.sdk.capture.Onfido;
+import com.onfido.android.sdk.capture.OnfidoFactory;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Onfido client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +27,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                client.start(false);
             }
         });
+
+        client = OnfidoFactory.create(this).getClient();
+
+        client.start(false);
     }
 
     @Override
