@@ -1,4 +1,4 @@
-package com.onfido.sampleapp;
+package com.onfido.android.app.sample;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.onfido.android.app.sample.R;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
