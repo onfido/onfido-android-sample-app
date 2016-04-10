@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.onfido.android.app.sample.R;
 import com.onfido.android.sdk.capture.Onfido;
+import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,17 +24,19 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final OnfidoConfig config = OnfidoConfig.builder().withSyncWaitTime(5).build();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                client.start(false);
+                client.start(config);
             }
         });
 
         client = OnfidoFactory.create(this).getClient();
 
-        client.start(false);
+        client.start(config);
     }
 
     @Override
