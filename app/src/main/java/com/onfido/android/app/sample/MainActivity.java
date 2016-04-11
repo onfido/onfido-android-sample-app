@@ -1,12 +1,12 @@
 package com.onfido.android.app.sample;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
@@ -23,19 +23,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final OnfidoConfig config = OnfidoConfig.builder().withSyncWaitTime(5).build();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                client.start(config);
-            }
-        });
-
+        setTitle("Choose example option");
         client = OnfidoFactory.create(this).getClient();
 
-        client.start(config);
+        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(5);
+        findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+            }
+        });
+        findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.withShouldCollectDetails(false);
+                client.start(builder.build());
+            }
+        });
     }
 
     @Override
