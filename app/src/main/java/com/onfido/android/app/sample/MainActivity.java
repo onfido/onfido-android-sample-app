@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
@@ -30,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+                builder.withShouldCollectDetails(true);
+                client.start(builder.build());
             }
         });
         findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
