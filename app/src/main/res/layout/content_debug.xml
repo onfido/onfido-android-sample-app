@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:paddingBottom="@dimen/activity_vertical_margin"
+  android:paddingLeft="@dimen/activity_horizontal_margin"
+  android:paddingRight="@dimen/activity_horizontal_margin"
+  android:paddingTop="@dimen/activity_vertical_margin"
+  android:orientation="vertical"
+  app:layout_behavior="@string/appbar_scrolling_view_behavior"
+  tools:context="com.onfido.android.app.sample.DebugActivity"
+  tools:showIn="@layout/activity_debug">
+
+  <EditText
+    android:id="@+id/firstName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:hint="first name" />
+
+  <EditText
+    android:id="@+id/lastName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:hint="last name" />
+
+  <EditText
+    android:id="@+id/email"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:hint="email" />
+
+  <Button
+    android:id="@+id/applicantButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="applicant" />
+
+  <EditText
+    android:id="@+id/applicantId"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:hint="id" />
+
+  <Button
+    android:id="@+id/uploadButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="upload" />
+
+  <Button
+    android:id="@+id/checkButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="check" />
+
+  <EditText
+    android:id="@+id/checkId"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:hint="check id" />
+
+  <Button
+    android:id="@+id/statusButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="check status" />
+
+</LinearLayout>

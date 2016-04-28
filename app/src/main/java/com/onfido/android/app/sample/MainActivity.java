@@ -1,52 +1,23 @@
 package com.onfido.android.app.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Toast;
 
-import com.L;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
-import com.onfido.android.sdk.capture.interactor.ApplicantInteractor;
-import com.onfido.android.sdk.capture.interactor.DocType;
-import com.onfido.android.sdk.capture.interactor.Interactor;
-import com.onfido.api.client.data.Applicant;
-import com.onfido.api.client.data.Check;
-import com.onfido.api.client.data.DocumentUpload;
-import com.onfido.api.client.data.ErrorData;
-import com.onfido.api.client.data.Report;
-
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private Onfido client;
 
-    private EditText firstName;
-    private EditText lastName;
-    private EditText email;
-    private EditText applicantId;
-    private EditText checkId;
-    private Button applicantButton;
-    private Button uploadButton;
-    private Button checkButton;
-    private Button statusButton;
-
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,221 +25,24 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final OnfidoConfig config = OnfidoConfig.builder().withSyncWaitTime(5).build();
-
-        firstName = (EditText) findViewById(R.id.firstName);
-        lastName = (EditText) findViewById(R.id.lastName);
-        email = (EditText) findViewById(R.id.email);
-        applicantId = (EditText) findViewById(R.id.applicantId);
-        checkId = (EditText) findViewById(R.id.checkId);
-        applicantButton = (Button) findViewById(R.id.applicantButton);
-        uploadButton = (Button) findViewById(R.id.uploadButton);
-        checkButton = (Button) findViewById(R.id.checkButton);
-        statusButton = (Button) findViewById(R.id.statusButton);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                client.start(config);
-            }
-        });
-
-        applicantButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doExecuteCreateApplicantRequest();
-            }
-        });
-
-        uploadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doExecuteUploadRequest();
-            }
-        });
-
-        checkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doExecuteCheckRequest();
-            }
-        });
-
-        statusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doExecuteStatusRequest();
-            }
-        });
+        setTitle("Choose example option");
 
         client = OnfidoFactory.create(this).getClient();
-    }
+        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(5);
 
-    private void doExecuteCreateApplicantRequest() {
-        executeApplicantRequest(
-                firstName.getText().toString(),
-                lastName.getText().toString(),
-                email.getText().toString());
-    }
-
-    private void executeApplicantRequest(String first, String last, String email) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        Applicant applicant;
-
-        if (email != null || email.length() > 0) {
-            applicant = new Applicant(first, last, email);
-        } else {
-            applicant = new Applicant(first, last);
-        }
-
-        interactor.create(
-                applicant,
-                new Interactor.InteractorListener<Applicant>() {
-                    @Override
-                    public void onSuccess(Applicant applicant) {
-                        L.d(MainActivity.this, "REQTST", "success!");
-                        applicantId.setText(applicant.getId());
-                    }
-
-                    @Override
-                    public void onError(ErrorData errorData) {
-                        L.d(MainActivity.this, "REQTST", "ERROR: " + errorData.getMessage());
-                    }
-                }
-        );
-    }
-
-    private void doExecuteUploadRequest() {
-        byte[] data = getData();
-
-        Applicant applicant = new Applicant(applicantId.getText().toString());
-
-//        File file = new File("/storage/emulated/0/DCIM/Camera/img.jpg");
-        File externalStorage = Environment.getExternalStorageDirectory();
-        File output = new File(externalStorage.getPath() + "/img.jpg");
-
-        if (!output.exists()) {
-            try {
-                output.createNewFile();
-            } catch (IOException e) {
-                L.e(e.getMessage());
-            }
-        }
-        output.setWritable(true);
-
-        FileOutputStream fileOutputStream;
-        BufferedOutputStream bufferedOutputStream;
-        try {
-            fileOutputStream = new FileOutputStream(output);
-            bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-            bufferedOutputStream.write(data);
-            bufferedOutputStream.flush();
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            bufferedOutputStream.close();
-        } catch (IOException e) {
-            L.e(e.getMessage());
-        }
-
-        executeUploadRequest(applicant, output);
-    }
-
-    private void executeUploadRequest(Applicant applicant, File file) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        interactor.upload(
-                applicant,
-                file.getName(),
-                DocType.NATIONAL_ID_CARD, // ex. "national_identity_card"
-                "image/jpeg",
-                file,
-                new Interactor.InteractorListener<DocumentUpload>() {
-                    @Override
-                    public void onSuccess(DocumentUpload documentUpload) {
-                        L.d(MainActivity.this, "REQTST", "success! " + documentUpload.getId());
-                    }
-
-                    @Override
-                    public void onError(ErrorData errorData) {
-                        String message = errorData == null ? "null error data" : errorData.getMessage();
-                        L.d(MainActivity.this, "REQTST", "ERROR: " + message);
-                    }
-                }
-        );
-    }
-
-    private byte[] getData() {
-        InputStream inputStream = getResources().openRawResource(R.raw.jpg);
-        int length = 0;
-
-        try {
-            length = inputStream.available();
-        } catch (IOException e) {
-            L.d("REQTST", "input stream: "+e.getMessage());
-        }
-
-        ByteArrayOutputStream bufferedOutputStream = new ByteArrayOutputStream();
-        byte[] buff = new byte[length];
-        int i = Integer.MAX_VALUE;
-        try {
-            while ((i = inputStream.read(buff, 0, buff.length)) > 0) {
-                bufferedOutputStream.write(buff, 0, i);
-            }
-        } catch (IOException e) {
-            L.d("REQTST", "write: " + e.getMessage());
-        }
-
-        return bufferedOutputStream.toByteArray();
-    }
-
-    private void doExecuteCheckRequest() {
-        Applicant applicant = new Applicant(applicantId.getText().toString());
-        List<Report> reports = Arrays.asList(new Report("identity"));
-        executeCheckRequest(applicant, reports);
-    }
-
-    private void executeCheckRequest(Applicant applicant, List<Report> reports) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        interactor.check(applicant, "standard", reports, new Interactor.InteractorListener<Check>() {
+        findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Check check) {
-                L.d(MainActivity.this, "success!");
-                checkId.setText(check.getId());
-            }
-
-            @Override
-            public void onError(ErrorData errorData) {
-                String message = errorData == null ? "null error data" : errorData.getMessage();
-                L.d(MainActivity.this, "ERROR: " + message);
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void doExecuteStatusRequest() {
-        Applicant applicant = new Applicant(applicantId.getText().toString());
-        Check check = new Check(checkId.getText().toString());
-        executeStatusRequest(applicant, check);
-    }
-
-    private void executeStatusRequest(Applicant applicant, final Check check) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        interactor.checkStatus(applicant, check, new Interactor.InteractorListener<Check>() {
+        findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Check updated) {
-                L.d(MainActivity.this, "success! status="+ updated.getStatus());
-            }
-
-            @Override
-            public void onError(ErrorData errorData) {
-                String message = errorData == null ? "null error data" : errorData.getMessage();
-                L.d(MainActivity.this, "ERROR: " + message);
+            public void onClick(View v) {
+                builder.withShouldCollectDetails(false);
+                client.start(builder.build());
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -283,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, DebugActivity.class));
             return true;
         }
 
