@@ -1,7 +1,6 @@
 package com.onfido.android.app.sample;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,10 +23,7 @@ import com.onfido.api.client.data.DocumentUpload;
 import com.onfido.api.client.data.ErrorData;
 import com.onfido.api.client.data.Report;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -144,47 +140,18 @@ public class DebugActivity extends AppCompatActivity {
 
     private void doExecuteUploadRequest() {
         byte[] data = getData();
-
         Applicant applicant = new Applicant(applicantId.getText().toString());
-
-//        File file = new File("/storage/emulated/0/DCIM/Camera/img.jpg");
-        File externalStorage = Environment.getExternalStorageDirectory();
-        File output = new File(externalStorage.getPath() + "/img.jpg");
-
-        if (!output.exists()) {
-            try {
-                output.createNewFile();
-            } catch (IOException e) {
-                L.e(e.getMessage());
-            }
-        }
-        output.setWritable(true);
-
-        FileOutputStream fileOutputStream;
-        BufferedOutputStream bufferedOutputStream;
-        try {
-            fileOutputStream = new FileOutputStream(output);
-            bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-            bufferedOutputStream.write(data);
-            bufferedOutputStream.flush();
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            bufferedOutputStream.close();
-        } catch (IOException e) {
-            L.e(e.getMessage());
-        }
-
-        executeUploadRequest(applicant, output);
+        executeUploadRequest(applicant, data);
     }
 
-    private void executeUploadRequest(Applicant applicant, File file) {
+    private void executeUploadRequest(Applicant applicant, byte[] data) {
         ApplicantInteractor interactor = ApplicantInteractor.newInstance();
         interactor.upload(
                 applicant,
-                file.getName(),
+                "img.jpg",
                 DocType.NATIONAL_ID_CARD, // ex. "national_identity_card"
                 "image/jpeg",
-                file,
+                data,
                 new Interactor.InteractorListener<DocumentUpload>() {
                     @Override
                     public void onSuccess(DocumentUpload documentUpload) {
