@@ -14,14 +14,14 @@ import com.L;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
-import com.onfido.android.sdk.capture.interactor.ApplicantInteractor;
-import com.onfido.android.sdk.capture.interactor.DocType;
-import com.onfido.android.sdk.capture.interactor.Interactor;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
+import com.onfido.api.client.data.DocType;
 import com.onfido.api.client.data.DocumentUpload;
 import com.onfido.api.client.data.ErrorData;
 import com.onfido.api.client.data.Report;
+import com.onfido.api.client.interactor.ApplicantInteractor;
+import com.onfido.api.client.interactor.Interactor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
