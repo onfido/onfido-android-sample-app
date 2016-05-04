@@ -8,10 +8,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.onfido.android.sdk.capture.DateOfBirthConverter;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +34,22 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle("Choose example option");
         client = OnfidoFactory.create(this).getClient();
-        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(5).withApplicant(new Applicant("test", "applicant"));
+        final List<Address> addressList = new ArrayList<>();
+        addressList.add(Address.builder()
+                .withCountry(Locale.UK)
+                .withFlatNumber("5")
+                .withTown("London")
+                .withPostcode("E4 555")
+                .build()
+        );
+        final Applicant applicant = Applicant.builder()
+                .withFirstName("deineir")
+                .withLastName("oi3i3")
+                .withDateOfBirth(DateOfBirthConverter.newInstance(1958, 10, 10).asString())
+                .withEmail(new Random().nextInt(100000) + "me@me.com")
+                .withAddresses(addressList).build();
+
+        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(30).withApplicant(applicant);
 
         findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
             @Override

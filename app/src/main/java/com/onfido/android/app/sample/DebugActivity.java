@@ -16,6 +16,7 @@ import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
+import com.onfido.api.client.data.CheckType;
 import com.onfido.api.client.data.DocType;
 import com.onfido.api.client.data.DocumentUpload;
 import com.onfido.api.client.data.ErrorData;
@@ -113,16 +114,14 @@ public class DebugActivity extends AppCompatActivity {
 
     private void executeApplicantRequest(String first, String last, String email) {
         ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        Applicant applicant;
+        Applicant.Builder applicantBuilder = Applicant.builder().withFirstName(first).withLastName(last);
 
         if (email != null || email.length() > 0) {
-            applicant = new Applicant(first, last, email);
-        } else {
-            applicant = new Applicant(first, last);
+            applicantBuilder.withEmail(email);
         }
 
         interactor.create(
-                applicant,
+                applicantBuilder.build(),
                 new Interactor.InteractorListener<Applicant>() {
                     @Override
                     public void onSuccess(Applicant applicant) {
@@ -140,7 +139,7 @@ public class DebugActivity extends AppCompatActivity {
 
     private void doExecuteUploadRequest() {
         byte[] data = getData();
-        Applicant applicant = new Applicant(applicantId.getText().toString());
+        Applicant applicant = Applicant.builder().withId(applicantId.getText().toString()).build();
         executeUploadRequest(applicant, data);
     }
 
@@ -192,14 +191,14 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void doExecuteCheckRequest() {
-        Applicant applicant = new Applicant(applicantId.getText().toString());
-        List<Report> reports = Arrays.asList(new Report("identity"));
+        Applicant applicant = Applicant.builder().withId(applicantId.getText().toString()).build();
+        List<Report> reports = Arrays.asList(new Report(Report.Type.IDENTITY));
         executeCheckRequest(applicant, reports);
     }
 
     private void executeCheckRequest(Applicant applicant, List<Report> reports) {
         ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        interactor.check(applicant, "standard", reports, new Interactor.InteractorListener<Check>() {
+        interactor.check(applicant, CheckType.STANDARD, reports, new Interactor.InteractorListener<Check>() {
             @Override
             public void onSuccess(Check check) {
                 L.d(DebugActivity.this, "success!");
@@ -215,7 +214,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void doExecuteStatusRequest() {
-        Applicant applicant = new Applicant(applicantId.getText().toString());
+        Applicant applicant = Applicant.builder().withId(applicantId.getText().toString()).build();
         Check check = new Check(checkId.getText().toString());
         executeStatusRequest(applicant, check);
     }
