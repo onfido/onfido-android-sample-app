@@ -27,7 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle("Choose example option");
         client = OnfidoFactory.create(this).getClient();
-        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(5).withApplicant(new Applicant("test", "applicant"));
+        Applicant applicant = Applicant.builder()
+                .withFirstName("test")
+                .withLastName("applicant")
+                .build();
+        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(5).withApplicant(applicant);
 
         findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
             @Override

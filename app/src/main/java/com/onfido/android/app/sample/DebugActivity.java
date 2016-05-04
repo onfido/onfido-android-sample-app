@@ -116,9 +116,16 @@ public class DebugActivity extends AppCompatActivity {
         Applicant applicant;
 
         if (email != null || email.length() > 0) {
-            applicant = new Applicant(first, last, email);
+            applicant = Applicant.builder()
+                    .withFirstName(first)
+                    .withLastName(last)
+                    .withEmail(email)
+                    .build();
         } else {
-            applicant = new Applicant(first, last);
+            applicant = Applicant.builder()
+                    .withFirstName(first)
+                    .withLastName(last)
+                    .build();
         }
 
         interactor.create(
@@ -140,7 +147,9 @@ public class DebugActivity extends AppCompatActivity {
 
     private void doExecuteUploadRequest() {
         byte[] data = getData();
-        Applicant applicant = new Applicant(applicantId.getText().toString());
+        Applicant applicant = Applicant.builder()
+                .withId(applicantId.getText().toString())
+                .build();
         executeUploadRequest(applicant, data);
     }
 
@@ -192,14 +201,16 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void doExecuteCheckRequest() {
-        Applicant applicant = new Applicant(applicantId.getText().toString());
-        List<Report> reports = Arrays.asList(new Report("identity"));
+        Applicant applicant = Applicant.builder()
+                .withId(applicantId.getText().toString())
+                .build();
+        List<Report> reports = Arrays.asList(new Report(Report.Type.IDENTITY));
         executeCheckRequest(applicant, reports);
     }
 
     private void executeCheckRequest(Applicant applicant, List<Report> reports) {
         ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        interactor.check(applicant, "standard", reports, new Interactor.InteractorListener<Check>() {
+        interactor.check(applicant, Check.Type.EXPRESS, reports, new Interactor.InteractorListener<Check>() {
             @Override
             public void onSuccess(Check check) {
                 L.d(DebugActivity.this, "success!");
@@ -215,7 +226,9 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void doExecuteStatusRequest() {
-        Applicant applicant = new Applicant(applicantId.getText().toString());
+        Applicant applicant = Applicant.builder()
+                .withId(applicantId.getText().toString())
+                .build();
         Check check = new Check(checkId.getText().toString());
         executeStatusRequest(applicant, check);
     }
