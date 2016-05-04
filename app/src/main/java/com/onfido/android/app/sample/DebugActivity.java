@@ -113,23 +113,14 @@ public class DebugActivity extends AppCompatActivity {
 
     private void executeApplicantRequest(String first, String last, String email) {
         ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        Applicant applicant;
+        Applicant.Builder applicantBuilder = Applicant.builder().withFirstName(first).withLastName(last);
 
         if (email != null || email.length() > 0) {
-            applicant = Applicant.builder()
-                    .withFirstName(first)
-                    .withLastName(last)
-                    .withEmail(email)
-                    .build();
-        } else {
-            applicant = Applicant.builder()
-                    .withFirstName(first)
-                    .withLastName(last)
-                    .build();
+            applicantBuilder.withEmail(email);
         }
 
         interactor.create(
-                applicant,
+                applicantBuilder.build(),
                 new Interactor.InteractorListener<Applicant>() {
                     @Override
                     public void onSuccess(Applicant applicant) {
@@ -201,9 +192,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void doExecuteCheckRequest() {
-        Applicant applicant = Applicant.builder()
-                .withId(applicantId.getText().toString())
-                .build();
+        Applicant applicant = Applicant.builder().withId(applicantId.getText().toString()).build();
         List<Report> reports = Arrays.asList(new Report(Report.Type.IDENTITY));
         executeCheckRequest(applicant, reports);
     }
