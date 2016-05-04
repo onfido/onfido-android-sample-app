@@ -11,6 +11,7 @@ import android.view.View;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.api.client.data.Applicant;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle("Choose example option");
         client = OnfidoFactory.create(this).getClient();
-        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(5);
+        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(5).withApplicant(new Applicant("test", "applicant"));
 
         findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
             @Override
