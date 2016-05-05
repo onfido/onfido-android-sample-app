@@ -14,6 +14,7 @@ import com.L;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
 import com.onfido.api.client.data.DocType;
@@ -27,7 +28,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class DebugActivity extends AppCompatActivity {
 
@@ -113,7 +116,19 @@ public class DebugActivity extends AppCompatActivity {
 
     private void executeApplicantRequest(String first, String last, String email) {
         ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        Applicant.Builder applicantBuilder = Applicant.builder().withFirstName(first).withLastName(last);
+
+        Address address = Address.builder()
+                .withCountry(Locale.UK)
+                .withFlatNumber("5")
+                .withTown("London")
+                .withPostcode("E4 555")
+                .build();
+
+        Applicant.Builder applicantBuilder = Applicant.builder()
+                .withFirstName(first)
+                .withLastName(last)
+                .withAddresses(Collections.singletonList(address))
+                .withDateOfBirth("01-01-1974");
 
         if (email != null || email.length() > 0) {
             applicantBuilder.withEmail(email);
