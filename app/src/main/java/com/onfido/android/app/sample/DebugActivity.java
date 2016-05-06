@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -128,7 +129,7 @@ public class DebugActivity extends AppCompatActivity {
                 .withFirstName(first)
                 .withLastName(last)
                 .withAddresses(Collections.singletonList(address))
-                .withDateOfBirth("01-01-1974");
+                .withDateOfBirth(new GregorianCalendar(1974, 04, 25).getGregorianChange());
 
         if (email != null || email.length() > 0) {
             applicantBuilder.withEmail(email);
