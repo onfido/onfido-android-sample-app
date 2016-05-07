@@ -131,10 +131,6 @@ public class DebugActivity extends AppCompatActivity {
                 .withAddresses(Collections.singletonList(address))
                 .withDateOfBirth(new GregorianCalendar(1974, 04, 25).getGregorianChange());
 
-        if (email != null || email.length() > 0) {
-            applicantBuilder.withEmail(email);
-        }
-
         interactor.create(
                 applicantBuilder.build(),
                 new Interactor.InteractorListener<Applicant>() {

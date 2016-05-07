@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
                 .withFirstName("deineir")
                 .withLastName("oi3i3")
                 .withDateOfBirth(new GregorianCalendar(1974, 04, 25).getGregorianChange())
-                .withEmail(new Random().nextInt(100000) + "me@me.com")
                 .withAddresses(addressList).build();
 
         final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(30).withApplicant(applicant);
