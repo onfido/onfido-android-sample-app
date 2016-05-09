@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.onfido.android.sdk.capture.DateOfBirthConverter;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
@@ -17,9 +16,9 @@ import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,8 +70,7 @@ public class MainActivity extends AppCompatActivity {
         return Applicant.builder()
                 .withFirstName("deineir")
                 .withLastName("oi3i3")
-                .withDateOfBirth(DateOfBirthConverter.newInstance(1958, 10, 10).asString())
-                .withEmail(new Random().nextInt(100000) + "me@me.com")
+                .withDateOfBirth(new GregorianCalendar(1974, 04, 25).getGregorianChange())
                 .withAddresses(addressList).build();
     }
 
