@@ -2,6 +2,7 @@ package com.onfido.android.app.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -33,6 +34,31 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle("Choose example option");
         client = OnfidoFactory.create(this).getClient();
+
+        findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                client.start(getTestOnfidoConfigBuilder()
+                        .withShouldCollectDetails(true)
+                        .build());
+            }
+        });
+        findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                client.start(getTestOnfidoConfigBuilder()
+                        .withShouldCollectDetails(false)
+                        .build());
+            }
+        });
+    }
+
+    private OnfidoConfig.Builder getTestOnfidoConfigBuilder() {
+        return OnfidoConfig.builder().withSyncWaitTime(30).withApplicant(getTestApplicant());
+    }
+
+    @NonNull
+    private static Applicant getTestApplicant() {
         final List<Address> addressList = new ArrayList<>();
         addressList.add(Address.builder()
                 .withCountry(Locale.UK)
@@ -41,28 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 .withPostcode("E4 555")
                 .build()
         );
-        final Applicant applicant = Applicant.builder()
+        return Applicant.builder()
                 .withFirstName("deineir")
                 .withLastName("oi3i3")
                 .withDateOfBirth(new GregorianCalendar(1974, 04, 25).getGregorianChange())
                 .withAddresses(addressList).build();
-
-        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(30).withApplicant(applicant);
-
-        findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                builder.withShouldCollectDetails(true);
-                client.start(builder.build());
-            }
-        });
-        findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                builder.withShouldCollectDetails(false);
-                client.start(builder.build());
-            }
-        });
     }
 
     @Override
