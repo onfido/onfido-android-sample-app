@@ -230,7 +230,7 @@ public class DebugActivity extends AppCompatActivity {
         Applicant applicant = Applicant.builder()
                 .withId(applicantId.getText().toString())
                 .build();
-        Check check = new Check(checkId.getText().toString());
+        Check check = Check.builder().withId(checkId.getText().toString()).build();
         executeStatusRequest(applicant, check);
     }
 

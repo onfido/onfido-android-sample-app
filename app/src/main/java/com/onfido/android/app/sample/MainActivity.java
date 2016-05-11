@@ -43,10 +43,28 @@ public class MainActivity extends AppCompatActivity {
                         .build());
             }
         });
+        findViewById(R.id.tv_signup_async).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                client.start(getTestOnfidoConfigBuilder()
+                        .withAsyncCheck(true)
+                        .withShouldCollectDetails(true)
+                        .build());
+            }
+        });
         findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 client.start(getTestOnfidoConfigBuilder()
+                        .withShouldCollectDetails(false)
+                        .build());
+            }
+        });
+        findViewById(R.id.tv_account_async).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                client.start(getTestOnfidoConfigBuilder()
+                        .withAsyncCheck(true)
                         .withShouldCollectDetails(false)
                         .build());
             }
