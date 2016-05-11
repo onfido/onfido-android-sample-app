@@ -8,12 +8,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
 import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
+import com.onfido.api.client.data.Check;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -38,37 +40,50 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.start(getTestOnfidoConfigBuilder()
+                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
                         .withShouldCollectDetails(true)
-                        .build());
+                        .build()), 1);
             }
         });
         findViewById(R.id.tv_signup_async).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.start(getTestOnfidoConfigBuilder()
+                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
                         .withAsyncCheck(true)
                         .withShouldCollectDetails(true)
-                        .build());
+                        .build()), 1);
             }
         });
         findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.start(getTestOnfidoConfigBuilder()
+                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
                         .withShouldCollectDetails(false)
-                        .build());
+                        .build()), 1);
             }
         });
         findViewById(R.id.tv_account_async).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.start(getTestOnfidoConfigBuilder()
+                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
                         .withAsyncCheck(true)
                         .withShouldCollectDetails(false)
-                        .build());
+                        .build()), 1);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                final Check check = client.extractCheckResult(data);
+                Toast.makeText(this, "Success. Result: " + check.getResult() + ". Status: " + check.getStatus(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "User cancelled.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private OnfidoConfig.Builder getTestOnfidoConfigBuilder() {

@@ -73,7 +73,7 @@ public class DebugActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                client.start(builder.build());
+                startActivity(client.createIntent(builder.build()));
             }
         });
 
