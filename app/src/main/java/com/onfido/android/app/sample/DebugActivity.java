@@ -21,8 +21,8 @@ import com.onfido.api.client.data.DocType;
 import com.onfido.api.client.data.DocumentUpload;
 import com.onfido.api.client.data.ErrorData;
 import com.onfido.api.client.data.Report;
-import com.onfido.api.client.interactor.ApplicantInteractor;
-import com.onfido.api.client.interactor.Interactor;
+import com.onfido.api.client.OnfidoAPI;
+import com.onfido.api.client.Interactor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -116,7 +116,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeApplicantRequest(String first, String last, String email) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
+        OnfidoAPI interactor = OnfidoAPI.newInstance();
 
         Address address = Address.builder()
                 .withCountry(Locale.UK)
@@ -141,6 +141,11 @@ public class DebugActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onFailure() {
+
+                    }
+
+                    @Override
                     public void onError(ErrorData errorData) {
                         L.d(DebugActivity.this, "REQTST", "ERROR: " + errorData.getMessage());
                     }
@@ -157,7 +162,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeUploadRequest(Applicant applicant, byte[] data) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
+        OnfidoAPI interactor = OnfidoAPI.newInstance();
         interactor.upload(
                 applicant,
                 "img.jpg",
@@ -168,6 +173,11 @@ public class DebugActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentUpload documentUpload) {
                         L.d(DebugActivity.this, "REQTST", "success! " + documentUpload.getId());
+                    }
+
+                    @Override
+                    public void onFailure() {
+
                     }
 
                     @Override
@@ -210,12 +220,17 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeCheckRequest(Applicant applicant, List<Report> reports) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
+        OnfidoAPI interactor = OnfidoAPI.newInstance();
         interactor.check(applicant, Check.Type.EXPRESS, reports, new Interactor.InteractorListener<Check>() {
             @Override
             public void onSuccess(Check check) {
                 L.d(DebugActivity.this, "success!");
                 checkId.setText(check.getId());
+            }
+
+            @Override
+            public void onFailure() {
+
             }
 
             @Override
@@ -235,11 +250,16 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeStatusRequest(Applicant applicant, final Check check) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
+        OnfidoAPI interactor = OnfidoAPI.newInstance();
         interactor.checkStatus(applicant, check, new Interactor.InteractorListener<Check>() {
             @Override
             public void onSuccess(Check updated) {
                 L.d(DebugActivity.this, "success! status=" + updated.getStatus());
+            }
+
+            @Override
+            public void onFailure() {
+
             }
 
             @Override
