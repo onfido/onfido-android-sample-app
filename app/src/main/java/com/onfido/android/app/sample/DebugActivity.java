@@ -14,6 +14,7 @@ import com.L;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.api.client.OnfidoAPI;
 import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
@@ -21,8 +22,7 @@ import com.onfido.api.client.data.DocType;
 import com.onfido.api.client.data.DocumentUpload;
 import com.onfido.api.client.data.ErrorData;
 import com.onfido.api.client.data.Report;
-import com.onfido.api.client.OnfidoAPI;
-import com.onfido.api.client.Interactor;
+import com.onfido.api.client.OnfidoAPIImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -118,7 +118,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeApplicantRequest(String first, String last, String email) {
-        OnfidoAPI interactor = OnfidoAPI.newInstance(TOKEN);
+        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
 
         Address address = Address.builder()
                 .withCountry(Locale.UK)
@@ -135,7 +135,7 @@ public class DebugActivity extends AppCompatActivity {
 
         interactor.create(
                 applicantBuilder.build(),
-                new Interactor.InteractorListener<Applicant>() {
+                new OnfidoAPI.Listener<Applicant>() {
                     @Override
                     public void onSuccess(Applicant applicant) {
                         L.d(DebugActivity.this, "REQTST", "success!");
@@ -164,14 +164,14 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeUploadRequest(Applicant applicant, byte[] data) {
-        OnfidoAPI interactor = OnfidoAPI.newInstance(TOKEN);
+        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
         interactor.upload(
                 applicant,
                 "img.jpg",
                 DocType.NATIONAL_ID_CARD, // ex. "national_identity_card"
                 "image/jpeg",
                 data,
-                new Interactor.InteractorListener<DocumentUpload>() {
+                new OnfidoAPI.Listener<DocumentUpload>() {
                     @Override
                     public void onSuccess(DocumentUpload documentUpload) {
                         L.d(DebugActivity.this, "REQTST", "success! " + documentUpload.getId());
@@ -222,8 +222,8 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeCheckRequest(Applicant applicant, List<Report> reports) {
-        OnfidoAPI interactor = OnfidoAPI.newInstance(TOKEN);
-        interactor.check(applicant, Check.Type.EXPRESS, reports, new Interactor.InteractorListener<Check>() {
+        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
+        interactor.check(applicant, Check.Type.EXPRESS, reports, new OnfidoAPI.Listener<Check>() {
             @Override
             public void onSuccess(Check check) {
                 L.d(DebugActivity.this, "success!");
@@ -252,8 +252,8 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeStatusRequest(Applicant applicant, final Check check) {
-        OnfidoAPI interactor = OnfidoAPI.newInstance(TOKEN);
-        interactor.checkStatus(applicant, check, new Interactor.InteractorListener<Check>() {
+        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
+        interactor.checkStatus(applicant, check, new OnfidoAPI.Listener<Check>() {
             @Override
             public void onSuccess(Check updated) {
                 L.d(DebugActivity.this, "success! status=" + updated.getStatus());
