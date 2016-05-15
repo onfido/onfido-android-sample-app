@@ -14,6 +14,7 @@ import com.L;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.api.client.OnfidoAPI;
 import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
@@ -21,8 +22,7 @@ import com.onfido.api.client.data.DocType;
 import com.onfido.api.client.data.DocumentUpload;
 import com.onfido.api.client.data.ErrorData;
 import com.onfido.api.client.data.Report;
-import com.onfido.api.client.interactor.ApplicantInteractor;
-import com.onfido.api.client.interactor.Interactor;
+import com.onfido.api.client.OnfidoAPIImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,6 +35,8 @@ import java.util.Locale;
 
 public class DebugActivity extends AppCompatActivity {
 
+    static final String TOKEN = "test_W_vo3OV4QxikzzOrQyLLGzXNdMeUCxSj";
+    
     private Onfido client;
 
     private EditText firstName;
@@ -116,7 +118,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeApplicantRequest(String first, String last, String email) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
+        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
 
         Address address = Address.builder()
                 .withCountry(Locale.UK)
@@ -133,11 +135,16 @@ public class DebugActivity extends AppCompatActivity {
 
         interactor.create(
                 applicantBuilder.build(),
-                new Interactor.InteractorListener<Applicant>() {
+                new OnfidoAPI.Listener<Applicant>() {
                     @Override
                     public void onSuccess(Applicant applicant) {
                         L.d(DebugActivity.this, "REQTST", "success!");
                         applicantId.setText(applicant.getId());
+                    }
+
+                    @Override
+                    public void onFailure() {
+
                     }
 
                     @Override
@@ -157,17 +164,22 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeUploadRequest(Applicant applicant, byte[] data) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
+        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
         interactor.upload(
                 applicant,
                 "img.jpg",
                 DocType.NATIONAL_ID_CARD, // ex. "national_identity_card"
                 "image/jpeg",
                 data,
-                new Interactor.InteractorListener<DocumentUpload>() {
+                new OnfidoAPI.Listener<DocumentUpload>() {
                     @Override
                     public void onSuccess(DocumentUpload documentUpload) {
                         L.d(DebugActivity.this, "REQTST", "success! " + documentUpload.getId());
+                    }
+
+                    @Override
+                    public void onFailure() {
+
                     }
 
                     @Override
@@ -210,12 +222,17 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeCheckRequest(Applicant applicant, List<Report> reports) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        interactor.check(applicant, Check.Type.EXPRESS, reports, new Interactor.InteractorListener<Check>() {
+        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
+        interactor.check(applicant, Check.Type.EXPRESS, reports, new OnfidoAPI.Listener<Check>() {
             @Override
             public void onSuccess(Check check) {
                 L.d(DebugActivity.this, "success!");
                 checkId.setText(check.getId());
+            }
+
+            @Override
+            public void onFailure() {
+
             }
 
             @Override
@@ -235,11 +252,16 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeStatusRequest(Applicant applicant, final Check check) {
-        ApplicantInteractor interactor = ApplicantInteractor.newInstance();
-        interactor.checkStatus(applicant, check, new Interactor.InteractorListener<Check>() {
+        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
+        interactor.checkStatus(applicant, check, new OnfidoAPI.Listener<Check>() {
             @Override
             public void onSuccess(Check updated) {
                 L.d(DebugActivity.this, "success! status=" + updated.getStatus());
+            }
+
+            @Override
+            public void onFailure() {
+
             }
 
             @Override
