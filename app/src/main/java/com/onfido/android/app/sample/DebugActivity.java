@@ -35,6 +35,8 @@ import java.util.Locale;
 
 public class DebugActivity extends AppCompatActivity {
 
+    static final String TOKEN = "test_W_vo3OV4QxikzzOrQyLLGzXNdMeUCxSj";
+    
     private Onfido client;
 
     private EditText firstName;
@@ -116,7 +118,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeApplicantRequest(String first, String last, String email) {
-        OnfidoAPI interactor = OnfidoAPI.newInstance();
+        OnfidoAPI interactor = OnfidoAPI.newInstance(TOKEN);
 
         Address address = Address.builder()
                 .withCountry(Locale.UK)
@@ -162,7 +164,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeUploadRequest(Applicant applicant, byte[] data) {
-        OnfidoAPI interactor = OnfidoAPI.newInstance();
+        OnfidoAPI interactor = OnfidoAPI.newInstance(TOKEN);
         interactor.upload(
                 applicant,
                 "img.jpg",
@@ -220,7 +222,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeCheckRequest(Applicant applicant, List<Report> reports) {
-        OnfidoAPI interactor = OnfidoAPI.newInstance();
+        OnfidoAPI interactor = OnfidoAPI.newInstance(TOKEN);
         interactor.check(applicant, Check.Type.EXPRESS, reports, new Interactor.InteractorListener<Check>() {
             @Override
             public void onSuccess(Check check) {
@@ -250,7 +252,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeStatusRequest(Applicant applicant, final Check check) {
-        OnfidoAPI interactor = OnfidoAPI.newInstance();
+        OnfidoAPI interactor = OnfidoAPI.newInstance(TOKEN);
         interactor.checkStatus(applicant, check, new Interactor.InteractorListener<Check>() {
             @Override
             public void onSuccess(Check updated) {
