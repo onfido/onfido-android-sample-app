@@ -15,6 +15,7 @@ import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
 import com.onfido.api.client.OnfidoAPI;
+import com.onfido.api.client.OnfidoAPIFactory;
 import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
@@ -22,7 +23,6 @@ import com.onfido.api.client.data.DocType;
 import com.onfido.api.client.data.DocumentUpload;
 import com.onfido.api.client.data.ErrorData;
 import com.onfido.api.client.data.Report;
-import com.onfido.api.client.OnfidoAPIImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -118,7 +118,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeApplicantRequest(String first, String last, String email) {
-        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
+        OnfidoAPI interactor = OnfidoAPIFactory.create(TOKEN);
 
         Address address = Address.builder()
                 .withCountry(Locale.UK)
@@ -164,7 +164,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeUploadRequest(Applicant applicant, byte[] data) {
-        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
+        OnfidoAPI interactor = OnfidoAPIFactory.create(TOKEN);
         interactor.upload(
                 applicant,
                 "img.jpg",
@@ -222,7 +222,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeCheckRequest(Applicant applicant, List<Report> reports) {
-        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
+        OnfidoAPI interactor = OnfidoAPIFactory.create(TOKEN);
         interactor.check(applicant, Check.Type.EXPRESS, reports, new OnfidoAPI.Listener<Check>() {
             @Override
             public void onSuccess(Check check) {
@@ -252,7 +252,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     private void executeStatusRequest(Applicant applicant, final Check check) {
-        OnfidoAPIImpl interactor = OnfidoAPIImpl.newInstance(TOKEN);
+        OnfidoAPI interactor = OnfidoAPIFactory.create(TOKEN);
         interactor.checkStatus(applicant, check, new OnfidoAPI.Listener<Check>() {
             @Override
             public void onSuccess(Check updated) {
