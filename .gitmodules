@@ -1,3 +1,0 @@
-[submodule "android-capture-sdk"]
-	path = android-capture-sdk
-	url = git@bitbucket.org:onfido-mobile/android-capture-sdk.git
