@@ -35,7 +35,7 @@ import java.util.Locale;
 
 public class DebugActivity extends AppCompatActivity {
 
-    static final String TOKEN = "test_W_vo3OV4QxikzzOrQyLLGzXNdMeUCxSj";
+    static final String TOKEN = "ONFIDO_API_TOKEN";
     
     private Onfido client;
 
