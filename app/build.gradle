@@ -23,6 +23,7 @@ android {
 }
 
 repositories {
+    mavenLocal()
     maven {
         url  "https://dl.bintray.com/onfido/maven"
     }
@@ -30,11 +31,8 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
-    compile 'com.onfido.sdk.capture:onfido-capture-sdk:+'
-
+    compile ("com.onfido.sdk.capture:onfido-capture-sdk:0.0.5")
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
-
     testCompile 'junit:junit:4.12'
 }
