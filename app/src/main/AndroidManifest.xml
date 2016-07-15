@@ -22,6 +22,7 @@
         <activity
             android:name=".DemoActivity"
             android:label="@string/app_demo_name"
+            android:icon="@drawable/app_icon"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
