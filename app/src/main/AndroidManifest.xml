@@ -28,7 +28,7 @@
 
         <meta-data
             android:name="onfido_api_token"
-            android:value="ONFIDO_API_TOKEN"/>
+            android:value="@string/onfido_api_token"/>
     </application>
 
 </manifest>

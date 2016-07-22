@@ -20,9 +20,42 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    //Passing api token to binary
+    //ref: https://gist.github.com/VDenis/46c222b16683447bab33
+    //Api token can be defined as environment variable or in a file
+    //Exception message has more specific information where the api token should be placed
+
+    def AppTokenKey = 'onfido_api_token'
+    def EnvAppToken = "$System.env.ONFIDO_API_TOKEN"
+    def AppTokenFile = 'secrets'
+
+    def AppTokenVal = EnvAppToken
+
+    if (AppTokenVal instanceof String == false){
+        try {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file(AppTokenFile).newDataInputStream())
+            AppTokenVal = properties.getProperty(AppTokenKey)
+            if (AppTokenVal==null) throw new Exception(AppTokenKey+" not found in "+AppTokenFile);
+        }
+        catch (Exception e){
+            throw new GradleException(e.message+"\n You have not defined an app key for the Onfido api\n You can define ONFIDO_API_TOKEN as environment variable or in "+ AppTokenFile +" as "+AppTokenKey)
+        }
+    }
+
+    buildTypes {
+        buildTypes.each {
+            it.buildConfigField 'String', AppTokenKey, '\"'+AppTokenVal+'\"'
+            it.resValue 'string', AppTokenKey, AppTokenVal
+        }
+    }
 }
 
+
+
 repositories {
+    mavenLocal()
     maven {
         url  "https://dl.bintray.com/onfido/maven"
     }
@@ -30,11 +63,8 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
-    compile 'com.onfido.sdk.capture:onfido-capture-sdk:+'
-
+    compile ("com.onfido.sdk.capture:onfido-capture-sdk:0.0.5")
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
-
     testCompile 'junit:junit:4.12'
 }
