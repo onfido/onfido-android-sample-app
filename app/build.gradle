@@ -27,7 +27,7 @@ android {
     //Exception message has more specific information where the api token should be placed
 
     def AppTokenKey = 'onfido_api_token'
-    def EnvAppToken = "$System.env.ONFIDO_API_TOKEN"
+    def EnvAppToken = "$System.env.ONFIDO_API_TOKEN".toString()
     def AppTokenFile = 'secrets'
 
     def AppTokenVal = EnvAppToken
