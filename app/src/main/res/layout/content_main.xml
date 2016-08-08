@@ -38,4 +38,10 @@
         android:layout_height="wrap_content"
         android:text="From account screens (async_check)"/>
 
+    <Button
+        android:id="@+id/tv_custom_flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Custom Flow (async_check)"/>
+
 </LinearLayout>

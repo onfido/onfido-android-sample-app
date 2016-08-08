@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.android.sdk.capture.ui.FlowAction;
 import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,6 +70,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
                         .withAsyncCheck(true)
                         .withShouldCollectDetails(false)
+                        .build()), 1);
+            }
+        });
+
+        final FlowAction[] flowSteps = new FlowAction[]{FlowAction.CAPTURE_DOCUMENT};
+        findViewById(R.id.tv_custom_flow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
+                        .withCustomFlow(flowSteps)
                         .build()), 1);
             }
         });
