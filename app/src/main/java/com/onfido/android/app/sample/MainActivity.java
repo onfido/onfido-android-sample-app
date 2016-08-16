@@ -13,7 +13,8 @@ import android.widget.Toast;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
-import com.onfido.android.sdk.capture.ui.FlowAction;
+import com.onfido.android.sdk.capture.ui.options.FlowStep;
+import com.onfido.android.sdk.capture.ui.options.MessageScreenOptions;
 import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
@@ -74,12 +75,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final FlowAction[] flowSteps = new FlowAction[]{FlowAction.CAPTURE_DOCUMENT};
+        final FlowStep[] flowSteps = new FlowStep[]{FlowStep.CAPTURE_DOCUMENT,FlowStep.CAPTURE_FACE};
         findViewById(R.id.tv_custom_flow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
                         .withCustomFlow(flowSteps)
+                        .build()), 1);
+            }
+        });
+
+        final FlowStep[] flowStepsWithOptions = new FlowStep[]{
+                new FlowStep(new MessageScreenOptions("Test title","Description","NEXT Button!")),
+                FlowStep.CAPTURE_DOCUMENT,
+                FlowStep.CAPTURE_FACE
+        };
+        findViewById(R.id.tv_custom_flow_options).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
+                        .withCustomFlow(flowStepsWithOptions)
                         .build()), 1);
             }
         });
