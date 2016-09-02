@@ -26,28 +26,33 @@ android {
     //Api token can be defined as environment variable or in a file
     //Exception message has more specific information where the api token should be placed
 
-    def AppTokenKey = 'onfido_api_token'
-    def EnvAppToken = "$System.env.ONFIDO_API_TOKEN".toString()
-    def AppTokenFile = 'secrets'
+    final APP_TOKEN_KEY = 'onfido_api_token'
+    final APP_TOKEN_FILE = 'secrets'
+    final APP_TOKEN_ENV_VAR_NAME = 'ONFIDO_API_TOKEN'
+    final ERROR_MESSAGE =   "You have not defined an app key for the Onfido api."+
+                            "\nYou can define "+APP_TOKEN_ENV_VAR_NAME+" as environment variable," +
+                            " or put " + APP_TOKEN_KEY+"=KEY_HERE  in a file ./"+APP_TOKEN_FILE;
 
-    def AppTokenVal = EnvAppToken
+    def appTokenVal = System.getenv(APP_TOKEN_ENV_VAR_NAME)
 
-    if (AppTokenVal instanceof String == false){
+    if (!appTokenVal) {
         try {
             Properties properties = new Properties()
-            properties.load(project.rootProject.file(AppTokenFile).newDataInputStream())
-            AppTokenVal = properties.getProperty(AppTokenKey)
-            if (AppTokenVal==null) throw new Exception(AppTokenKey+" not found in "+AppTokenFile);
+            properties.load(project.rootProject.file(APP_TOKEN_FILE).newDataInputStream())
+            appTokenVal = properties.getProperty(APP_TOKEN_KEY)
+            if (appTokenVal == null){
+                throw new InvalidUserDataException(ERROR_MESSAGE)
+            }
         }
-        catch (Exception e){
-            throw new GradleException(e.message+"\n You have not defined an app key for the Onfido api\n You can define ONFIDO_API_TOKEN as environment variable or in "+ AppTokenFile +" as "+AppTokenKey)
+        catch (Exception e) {
+            throw new InvalidUserDataException(e.message + "\n"+ERROR_MESSAGE);
         }
     }
 
     buildTypes {
         buildTypes.each {
-            it.buildConfigField 'String', AppTokenKey, '\"'+AppTokenVal+'\"'
-            it.resValue 'string', AppTokenKey, AppTokenVal
+            it.buildConfigField 'String', APP_TOKEN_KEY, '\"'+appTokenVal+'\"'
+            it.resValue 'string', APP_TOKEN_KEY, appTokenVal
         }
     }
 }
