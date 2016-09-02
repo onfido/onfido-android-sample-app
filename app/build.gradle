@@ -26,21 +26,23 @@ android {
     //Api token can be defined as environment variable or in a file
     //Exception message has more specific information where the api token should be placed
 
-    def AppTokenKey = 'onfido_api_token'
-    def EnvAppToken = "$System.env.ONFIDO_API_TOKEN".toString()
-    def AppTokenFile = 'secrets'
+    final AppTokenKey = 'onfido_api_token'
+    final AppTokenFile = 'secrets'
+    final errorMessage = "\n You have not defined an app key for the Onfido api\n You can define ONFIDO_API_TOKEN as environment variable or in " + AppTokenFile + " as " + AppTokenKey;
 
-    def AppTokenVal = EnvAppToken
+    def AppTokenVal = System.getenv('ONFIDO_API_TOKEN')
 
-    if (AppTokenVal instanceof String == false){
+    if (!AppTokenVal) {
         try {
             Properties properties = new Properties()
             properties.load(project.rootProject.file(AppTokenFile).newDataInputStream())
             AppTokenVal = properties.getProperty(AppTokenKey)
-            if (AppTokenVal==null) throw new Exception(AppTokenKey+" not found in "+AppTokenFile);
+            if (AppTokenVal == null){
+                throw new InvalidUserDataException(errorMessage)
+            }
         }
-        catch (Exception e){
-            throw new GradleException(e.message+"\n You have not defined an app key for the Onfido api\n You can define ONFIDO_API_TOKEN as environment variable or in "+ AppTokenFile +" as "+AppTokenKey)
+        catch (Exception e) {
+            throw new InvalidUserDataException(e.message + "\n"+errorMessage);
         }
     }
 
