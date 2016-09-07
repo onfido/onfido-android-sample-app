@@ -48,6 +48,6 @@
         android:id="@+id/tv_custom_flow_options"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Custom Flow with Options"/>
+        android:text="Custom Flow without app form"/>
 
 </LinearLayout>

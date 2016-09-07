@@ -15,6 +15,7 @@ import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenOptions;
+import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
@@ -75,7 +76,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final FlowStep[] flowSteps = new FlowStep[]{FlowStep.CAPTURE_DOCUMENT,FlowStep.CAPTURE_FACE};
+        final FlowStep[] flowSteps = new FlowStep[]{
+                new MessageScreenStep("Welcome","This a custom standard flow","Start"),
+                FlowStep.APPLICANT_CREATE,
+                FlowStep.CAPTURE_DOCUMENT,
+                FlowStep.CAPTURE_FACE,
+                FlowStep.SYNC_LOADING,
+                new MessageScreenStep("Thank you","","Close")
+        };
         findViewById(R.id.tv_custom_flow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,9 +94,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final FlowStep[] flowStepsWithOptions = new FlowStep[]{
-                new FlowStep(new MessageScreenOptions("Test title","Description","NEXT Button!")),
+                new MessageScreenStep("Welcome","This flow only asks for document and face","Start"),
                 FlowStep.CAPTURE_DOCUMENT,
-                FlowStep.CAPTURE_FACE
+                FlowStep.CAPTURE_FACE,
+                FlowStep.SYNC_LOADING,
+                new MessageScreenStep("Thank you","","Close")
         };
         findViewById(R.id.tv_custom_flow_options).setOnClickListener(new View.OnClickListener() {
             @Override
