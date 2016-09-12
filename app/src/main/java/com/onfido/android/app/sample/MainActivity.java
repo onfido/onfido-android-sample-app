@@ -13,6 +13,9 @@ import android.widget.Toast;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.android.sdk.capture.ui.options.FlowStep;
+import com.onfido.android.sdk.capture.ui.options.MessageScreenOptions;
+import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,6 +72,39 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
                         .withAsyncCheck(true)
                         .withShouldCollectDetails(false)
+                        .build()), 1);
+            }
+        });
+
+        final FlowStep[] flowSteps = new FlowStep[]{
+                new MessageScreenStep("Welcome","This a custom standard flow","Start"),
+                FlowStep.APPLICANT_CREATE,
+                FlowStep.CAPTURE_DOCUMENT,
+                FlowStep.CAPTURE_FACE,
+                FlowStep.SYNC_LOADING,
+                new MessageScreenStep("Thank you","","Close")
+        };
+        findViewById(R.id.tv_custom_flow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
+                        .withCustomFlow(flowSteps)
+                        .build()), 1);
+            }
+        });
+
+        final FlowStep[] flowStepsWithOptions = new FlowStep[]{
+                new MessageScreenStep("Welcome","This flow only asks for document and face","Start"),
+                FlowStep.CAPTURE_DOCUMENT,
+                FlowStep.CAPTURE_FACE,
+                FlowStep.SYNC_LOADING,
+                new MessageScreenStep("Thank you","","Close")
+        };
+        findViewById(R.id.tv_custom_flow_options).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
+                        .withCustomFlow(flowStepsWithOptions)
                         .build()), 1);
             }
         });
