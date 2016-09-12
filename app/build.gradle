@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
 
     lintOptions {
@@ -64,6 +65,7 @@ repositories {
     maven {
         url  "https://dl.bintray.com/onfido/maven"
     }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
