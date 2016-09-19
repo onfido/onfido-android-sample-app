@@ -20,27 +20,21 @@ def getValueFromFileWithErrorMessage(filePath, key, String errorMessage) {
 def getValueFromFileOrEnv(String envKey, filePath, fileKey, errorMessage) {
     def appTokenVal = System.getenv(envKey)
 
+    errorMessage += "\nYou can define "+envKey+" as environment variable, or put " + fileKey+"=KEY_HERE  in a file ./"+filePath
+
     if (!appTokenVal) {
         appTokenVal = getValueFromFileWithErrorMessage(filePath, fileKey, errorMessage)
     }
     return appTokenVal;
 }
 
-def injectInStringResourcesAndJavaCode(String stringKey, String buildObjectKey, String value){
-    //Passing values to the binary
-    //ref: https://gist.github.com/VDenis/46c222b16683447bab33
-    android {
-        buildTypes {
-            buildTypes.each {
-                it.buildConfigField 'String', buildObjectKey, '\"' + value + '\"'
-                it.resValue 'string', stringKey, value
-            }
-        }
-    }
+def injectInStringResources(it, String stringKey, String value){
+    //needs to be called inside builtTypes or productFlavors closures
+    it.resValue 'string', stringKey, value
 }
 
 // Export methods by turning them into closures
 ext{
     getValueFromFileOrEnv = this.&getValueFromFileOrEnv
-    injectInStringResourcesAndJavaCode = this.&injectInStringResourcesAndJavaCode
+    injectInStringResources = this.&injectInStringResources
 }

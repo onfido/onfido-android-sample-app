@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 apply from: "$rootDir/helpers.gradle"
 
+//Api token can be defined as environment variable or in a file
+//Exception message has more specific information where the api token should be placed
+final APP_TOKEN_KEY = 'onfido_api_token'
+final APP_TOKEN_FILE = 'secrets'
+final APP_TOKEN_ENV_VAR_NAME = 'ONFIDO_API_TOKEN'
+final ERROR_MESSAGE =   "You have not defined an app key for the Onfido api."
+
+def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -12,6 +21,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        injectInStringResources(it, APP_TOKEN_KEY, apiKey)
     }
 
     lintOptions {
@@ -22,21 +32,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-
-    //Api token can be defined as environment variable or in a file
-    //Exception message has more specific information where the api token should be placed
-    final APP_TOKEN_KEY = 'onfido_api_token'
-    final APP_TOKEN_FILE = 'secrets'
-    final APP_TOKEN_ENV_VAR_NAME = 'ONFIDO_API_TOKEN'
-    final ERROR_MESSAGE =   "You have not defined an app key for the Onfido api."+
-                            "\nYou can define "+APP_TOKEN_ENV_VAR_NAME+" as environment variable," +
-                            " or put " + APP_TOKEN_KEY+"=KEY_HERE  in a file ./"+APP_TOKEN_FILE;
-
-    def value = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
-    injectInStringResourcesAndJavaCode(APP_TOKEN_KEY, APP_TOKEN_KEY, value)
 }
-
-
 
 repositories {
     mavenLocal()
