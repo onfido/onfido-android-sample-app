@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
 
     lintOptions {
@@ -64,11 +65,12 @@ repositories {
     maven {
         url  "https://dl.bintray.com/onfido/maven"
     }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile ("com.onfido.sdk.capture:onfido-capture-sdk:0.0.5")
+    compile ("com.onfido.sdk.capture:onfido-capture-sdk:0.1.0")
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     testCompile 'junit:junit:4.12'
