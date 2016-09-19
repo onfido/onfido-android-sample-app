@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: "$rootDir/helpers.gradle"
 
 android {
     compileSdkVersion 23
@@ -22,11 +23,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    //Passing api token to binary
-    //ref: https://gist.github.com/VDenis/46c222b16683447bab33
     //Api token can be defined as environment variable or in a file
     //Exception message has more specific information where the api token should be placed
-
     final APP_TOKEN_KEY = 'onfido_api_token'
     final APP_TOKEN_FILE = 'secrets'
     final APP_TOKEN_ENV_VAR_NAME = 'ONFIDO_API_TOKEN'
@@ -34,28 +32,8 @@ android {
                             "\nYou can define "+APP_TOKEN_ENV_VAR_NAME+" as environment variable," +
                             " or put " + APP_TOKEN_KEY+"=KEY_HERE  in a file ./"+APP_TOKEN_FILE;
 
-    def appTokenVal = System.getenv(APP_TOKEN_ENV_VAR_NAME)
-
-    if (!appTokenVal) {
-        try {
-            Properties properties = new Properties()
-            properties.load(project.rootProject.file(APP_TOKEN_FILE).newDataInputStream())
-            appTokenVal = properties.getProperty(APP_TOKEN_KEY)
-            if (appTokenVal == null){
-                throw new InvalidUserDataException(ERROR_MESSAGE)
-            }
-        }
-        catch (Exception e) {
-            throw new InvalidUserDataException(e.message + "\n"+ERROR_MESSAGE);
-        }
-    }
-
-    buildTypes {
-        buildTypes.each {
-            it.buildConfigField 'String', APP_TOKEN_KEY, '\"'+appTokenVal+'\"'
-            it.resValue 'string', APP_TOKEN_KEY, appTokenVal
-        }
-    }
+    def value = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
+    injectInStringResourcesAndJavaCode(APP_TOKEN_KEY, APP_TOKEN_KEY, value)
 }
 
 
