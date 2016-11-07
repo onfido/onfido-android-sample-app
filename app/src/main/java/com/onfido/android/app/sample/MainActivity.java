@@ -138,10 +138,11 @@ public class MainActivity extends AppCompatActivity {
                 .build()
         );
         return Applicant.builder()
-                .withFirstName("deineir")
-                .withLastName("oi3i3")
+                .withFirstName("Android User")
+                .withLastName("Test")
                 .withDateOfBirth(new GregorianCalendar(1974, 04, 25).getGregorianChange())
-                .withAddresses(addressList).build();
+                .build();
+                //.withAddresses(addressList).build();
     }
 
     @Override
