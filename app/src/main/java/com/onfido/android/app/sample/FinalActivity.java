@@ -31,18 +31,13 @@ public class FinalActivity extends AppCompatActivity implements NextActionListen
     }
 
     private void setFragment(final Fragment fragment) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (isFinishing()) {
-                    return;
-                }
+        if (isFinishing()) {
+            return;
+        }
 
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(com.onfido.android.sdk.capture.R.id.fl_content, fragment);
-                ft.commitAllowingStateLoss();
-            }
-        });
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(com.onfido.android.sdk.capture.R.id.fl_content, fragment);
+        ft.commitAllowingStateLoss();
     }
 
     @Override

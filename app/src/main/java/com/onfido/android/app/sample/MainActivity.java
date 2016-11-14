@@ -13,22 +13,26 @@ import android.widget.Toast;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.android.sdk.capture.ui.ErrorDialogFeature;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
-import com.onfido.android.sdk.capture.ui.options.MessageScreenOptions;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
+import com.onfido.api.client.OnfidoAPI;
 import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
+import com.onfido.api.client.data.ErrorData;
+import com.onfido.api.client.data.Report;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Stack;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ErrorDialogFeature.Listener {
 
     private Onfido client;
+    ErrorDialogFeature errorDialogFeature;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -39,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setTitle("Choose example option");
+
+        errorDialogFeature = new ErrorDialogFeature();
+        errorDialogFeature.attach(this);
+
         client = OnfidoFactory.create(this).getClient();
 
         findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
@@ -49,28 +57,11 @@ public class MainActivity extends AppCompatActivity {
                         .build()), 1);
             }
         });
-        findViewById(R.id.tv_signup_async).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
-                        .withAsyncCheck(true)
-                        .withShouldCollectDetails(true)
-                        .build()), 1);
-            }
-        });
+
         findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
-                        .withShouldCollectDetails(false)
-                        .build()), 1);
-            }
-        });
-        findViewById(R.id.tv_account_async).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
-                        .withAsyncCheck(true)
                         .withShouldCollectDetails(false)
                         .build()), 1);
             }
@@ -95,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
 
         final FlowStep[] flowStepsWithOptions = new FlowStep[]{
                 new MessageScreenStep("Welcome","This flow only asks for document and face","Start"),
-                FlowStep.CAPTURE_DOCUMENT,
+                //FlowStep.CAPTURE_DOCUMENT,
                 FlowStep.CAPTURE_FACE,
-                FlowStep.SYNC_LOADING,
+                //FlowStep.SYNC_LOADING,
                 new MessageScreenStep("Thank you","","Close")
         };
         findViewById(R.id.tv_custom_flow_options).setOnClickListener(new View.OnClickListener() {
@@ -115,16 +106,53 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                final Check check = client.extractCheckResult(data);
-                Toast.makeText(this, "Success. Result: " + check.getResult() + ". Status: " + check.getStatus(), Toast.LENGTH_LONG).show();
+                startCheck(data);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "User cancelled.", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    private OnfidoConfig.Builder getTestOnfidoConfigBuilder() {
-        return OnfidoConfig.builder().withSyncWaitTime(30).withApplicant(getTestApplicant());
+    private void startCheck(Intent intent){
+        final OnfidoConfig config   = client.getOnfidoConfigFrom(intent);
+        final Applicant applicant   = client.getApplicantFrom(intent);
+
+        List flowSteps = Arrays.asList(config.getFlowSteps());
+
+        final List<Report> currentReports = new ArrayList<>();
+        if (flowSteps.contains(FlowStep.CAPTURE_DOCUMENT)) {
+            currentReports.add(new Report(Report.Type.DOCUMENT));
+        }
+        if (flowSteps.contains(FlowStep.CAPTURE_FACE)) {
+            currentReports.add(new Report(Report.Type.IDENTITY));
+        }
+
+        client.createOnfidoApiClient().check(applicant, Check.Type.EXPRESS, currentReports, new OnfidoAPI.Listener<Check>() {
+                    @Override
+                    public void onSuccess(Check check) {
+                        Toast.makeText(MainActivity.this,
+                                "Success. Result: " + check.getResult() + ". Status: " + check.getStatus(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        showErrorMessage(getString(com.onfido.android.sdk.capture.R.string.error_connection_message));
+                    }
+
+                    @Override
+                    public void onError(ErrorData errorData) {
+                        showErrorMessage(errorData.getMessage());
+                    }
+                }
+        );
+    }
+
+    private void showErrorMessage(String message){
+        errorDialogFeature.show(message, MainActivity.this);
+    }
+
+    public static OnfidoConfig.Builder getTestOnfidoConfigBuilder() {
+        return OnfidoConfig.builder().withApplicant(getTestApplicant());
     }
 
     @NonNull
@@ -163,5 +191,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onErrorDialogClose() {
+
     }
 }

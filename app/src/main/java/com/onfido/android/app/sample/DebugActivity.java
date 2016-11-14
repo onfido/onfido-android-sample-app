@@ -57,7 +57,7 @@ public class DebugActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         client = OnfidoFactory.create(this).getClient();
-        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(5);
+        final OnfidoConfig.Builder builder = OnfidoConfig.builder();
 
         firstName = (EditText) findViewById(R.id.firstName);
         lastName = (EditText) findViewById(R.id.lastName);
