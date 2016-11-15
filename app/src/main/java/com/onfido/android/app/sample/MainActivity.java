@@ -132,17 +132,18 @@ public class MainActivity extends AppCompatActivity {
         final List<Address> addressList = new ArrayList<>();
         addressList.add(Address.builder()
                 .withCountry(Locale.UK)
-                .withFlatNumber("5")
+                .withBuildingName("40")
+                .withStreet("Long Acre")
                 .withTown("London")
-                .withPostcode("E4 555")
+                .withPostcode("WC2E 9LG")
                 .build()
         );
         return Applicant.builder()
                 .withFirstName("Android User")
                 .withLastName("Test")
                 .withDateOfBirth(new GregorianCalendar(1974, 04, 25).getGregorianChange())
+                .withAddresses(addressList)
                 .build();
-                //.withAddresses(addressList).build();
     }
 
     @Override
