@@ -17,7 +17,6 @@ import com.onfido.android.sdk.capture.ui.ErrorDialogFeature;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.api.client.OnfidoAPI;
-import com.onfido.api.client.data.Address;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
 import com.onfido.api.client.data.ErrorData;
@@ -25,9 +24,7 @@ import com.onfido.api.client.data.Report;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements ErrorDialogFeature.Listener {
 
@@ -52,51 +49,47 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
         findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
+                startOnfidoActivity(getTestOnfidoConfigBuilder()
                         .withShouldCollectDetails(true)
-                        .build()), 1);
+                        .build());
             }
         });
 
         findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
+                startOnfidoActivity(getTestOnfidoConfigBuilder()
                         .withShouldCollectDetails(false)
-                        .build()), 1);
+                        .build());
             }
         });
 
         final FlowStep[] flowSteps = new FlowStep[]{
                 new MessageScreenStep("Welcome","This a custom standard flow","Start"),
-                FlowStep.APPLICANT_CREATE,
                 FlowStep.CAPTURE_DOCUMENT,
                 FlowStep.CAPTURE_FACE,
-                FlowStep.SYNC_LOADING,
                 new MessageScreenStep("Thank you","","Close")
         };
         findViewById(R.id.tv_custom_flow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
+                startOnfidoActivity(getTestOnfidoConfigBuilder()
                         .withCustomFlow(flowSteps)
-                        .build()), 1);
+                        .build());
             }
         });
 
         final FlowStep[] flowStepsWithOptions = new FlowStep[]{
-                new MessageScreenStep("Welcome","This flow only asks for document and face","Start"),
-                //FlowStep.CAPTURE_DOCUMENT,
+                new MessageScreenStep("Welcome","This is a custom flow with only a face capture","Start"),
                 FlowStep.CAPTURE_FACE,
-                //FlowStep.SYNC_LOADING,
                 new MessageScreenStep("Thank you","","Close")
         };
         findViewById(R.id.tv_custom_flow_options).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(client.createIntent(getTestOnfidoConfigBuilder()
+                startOnfidoActivity(getTestOnfidoConfigBuilder()
                         .withCustomFlow(flowStepsWithOptions)
-                        .build()), 1);
+                        .build());
             }
         });
     }
@@ -104,19 +97,28 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                startCheck(data);
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "User cancelled.", Toast.LENGTH_LONG).show();
+        client.handleActivityResult(requestCode, resultCode, data, new Onfido.OnfidoResultListener() {
+            @Override
+            public void success(OnfidoConfig onfidoConfig, Applicant applicant, OnfidoAPI onfidoAPI) {
+                startCheck(onfidoConfig, applicant, onfidoAPI);
             }
-        }
+
+            @Override
+            public void fail() {
+                showToast("User cancelled.");
+            }
+        });
     }
 
-    private void startCheck(Intent intent){
-        final OnfidoConfig config   = client.getOnfidoConfigFrom(intent);
-        final Applicant applicant   = client.getApplicantFrom(intent);
+    private void startOnfidoActivity(OnfidoConfig config){
+        client.startActivityForResult(this, 1, config);
+    }
 
+    private void showToast(String text){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+    }
+
+    private void startCheck(OnfidoConfig config, Applicant applicant, OnfidoAPI onfidoAPI){
         List flowSteps = Arrays.asList(config.getFlowSteps());
 
         final List<Report> currentReports = new ArrayList<>();
@@ -127,11 +129,10 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
             currentReports.add(new Report(Report.Type.IDENTITY));
         }
 
-        client.createOnfidoApiClient().check(applicant, Check.Type.EXPRESS, currentReports, new OnfidoAPI.Listener<Check>() {
+        onfidoAPI.check(applicant, Check.Type.EXPRESS, currentReports, new OnfidoAPI.Listener<Check>() {
                     @Override
                     public void onSuccess(Check check) {
-                        Toast.makeText(MainActivity.this,
-                                "Success. Result: " + check.getResult() + ". Status: " + check.getStatus(), Toast.LENGTH_LONG).show();
+                        showToast("Success. Result: " + check.getResult() + ". Status: " + check.getStatus());
                     }
 
                     @Override
@@ -151,27 +152,8 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
         errorDialogFeature.show(message, MainActivity.this);
     }
 
-    public static OnfidoConfig.Builder getTestOnfidoConfigBuilder() {
-        return OnfidoConfig.builder().withApplicant(getTestApplicant());
-    }
-
-    @NonNull
-    private static Applicant getTestApplicant() {
-        final List<Address> addressList = new ArrayList<>();
-        addressList.add(Address.builder()
-                .withCountry(Locale.UK)
-                .withBuildingName("40")
-                .withStreet("Long Acre")
-                .withTown("London")
-                .withPostcode("WC2E 9LG")
-                .build()
-        );
-        return Applicant.builder()
-                .withFirstName("Android User")
-                .withLastName("Test")
-                .withDateOfBirth(new GregorianCalendar(1974, 04, 25).getGregorianChange())
-                .withAddresses(addressList)
-                .build();
+    private static OnfidoConfig.Builder getTestOnfidoConfigBuilder() {
+        return ActivityUtils.getTestOnfidoConfigBuilder();
     }
 
     @Override

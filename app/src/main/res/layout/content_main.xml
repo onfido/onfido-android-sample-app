@@ -21,22 +21,10 @@
         android:text="From signup screen"/>
 
     <Button
-        android:id="@+id/tv_signup_async"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="From signup screen (async_check)"/>
-
-    <Button
         android:id="@+id/tv_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="From account screens"/>
-
-    <Button
-        android:id="@+id/tv_account_async"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="From account screens (async_check)"/>
 
     <Button
         android:id="@+id/tv_custom_flow"
@@ -48,6 +36,6 @@
         android:id="@+id/tv_custom_flow_options"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Custom Flow without app form"/>
+        android:text="Custom Flow with face only"/>
 
 </LinearLayout>
