@@ -101,6 +101,7 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void completedCheck(Check check){
+        setContentView(R.layout.demo_main);
         Toast.makeText(DemoActivity.this,
                 "Success. Result: " + check.getResult() + ". Status: " + check.getStatus(), Toast.LENGTH_LONG).show();
         startActivity(new Intent().setClass(DemoActivity.this,FinalActivity.class));
