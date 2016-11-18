@@ -31,29 +31,11 @@ public class DemoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = OnfidoFactory.create(this).getClient();
-        setContentView(R.layout.demo_main);
 
         errorDialogFeature = new ErrorDialogFeature();
         errorDialogFeature.attach(this);
 
-        final FlowStep[] flowStepsWithOptions = new FlowStep[]{
-                new MessageScreenStep("Welcome","In the following steps you will be asked to perform a verification check","Start"),
-                //FlowStep.APPLICANT_CREATE,
-                FlowStep.CAPTURE_DOCUMENT,
-                FlowStep.MESSAGE_FACE_VERIFICATION,
-                FlowStep.CAPTURE_FACE,
-                new MessageScreenStep("Thank you","We will use your captured document and face to perform a verification check","Start Check")
-        };
-
-        findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                client.startActivityForResult(DemoActivity.this, 1,
-                        ActivityUtils.getTestOnfidoConfigBuilder()
-                            .withCustomFlow(flowStepsWithOptions)
-                            .build());
-            }
-        });
+        setWelcomeScreen();
     }
 
     @Override
@@ -107,7 +89,30 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void closeLoadingScreen(){
+        setWelcomeScreen();
+    }
+
+    private void setWelcomeScreen(){
         setContentView(R.layout.demo_main);
+
+        final FlowStep[] flowStepsWithOptions = new FlowStep[]{
+                new MessageScreenStep("Welcome","In the following steps you will be asked to perform a verification check","Start"),
+                //FlowStep.APPLICANT_CREATE,
+                FlowStep.CAPTURE_DOCUMENT,
+                FlowStep.MESSAGE_FACE_VERIFICATION,
+                FlowStep.CAPTURE_FACE,
+                new MessageScreenStep("Thank you","We will use your captured document and face to perform a verification check","Start Check")
+        };
+
+        findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                client.startActivityForResult(DemoActivity.this, 1,
+                        ActivityUtils.getTestOnfidoConfigBuilder()
+                                .withCustomFlow(flowStepsWithOptions)
+                                .build());
+            }
+        });
     }
 
     private void completedCheck(Check check){
@@ -118,8 +123,8 @@ public class DemoActivity extends AppCompatActivity {
     private boolean mCloseLoadingScreenOnExit = false;
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
         if (mCloseLoadingScreenOnExit) closeLoadingScreen();
     }
 
