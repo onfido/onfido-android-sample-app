@@ -10,6 +10,9 @@ final ERROR_MESSAGE =   "You have not defined an app key for the Onfido api."
 
 def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
 
+def sdkVersion = '0.2.1'
+def versionCodeNumber = 1
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -18,8 +21,8 @@ android {
         applicationId "com.onfido.sampleapp"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode versionCodeNumber
+        versionName "$versionCode-sdk:$sdkVersion"
         multiDexEnabled true
         injectInStringResources(it, APP_TOKEN_KEY, apiKey)
     }
@@ -43,7 +46,7 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:'
-    compile ("com.onfido.sdk.capture:onfido-capture-sdk:0.2.0")
+    compile ("com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion")
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     testCompile 'junit:junit:4.12'
