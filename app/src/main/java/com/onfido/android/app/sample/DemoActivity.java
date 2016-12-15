@@ -43,12 +43,12 @@ public class DemoActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         client.handleActivityResult(requestCode, resultCode, data, new Onfido.OnfidoResultListener() {
             @Override
-            public void success(OnfidoConfig onfidoConfig, Applicant applicant, OnfidoAPI onfidoAPI) {
+            public void userCompleted(Applicant applicant, OnfidoAPI onfidoAPI, OnfidoConfig onfidoConfig) {
                 startCheck(onfidoConfig, applicant, onfidoAPI);
             }
 
             @Override
-            public void fail() {
+            public void userExited(Applicant applicant, OnfidoAPI onfidoApi, OnfidoConfig config) {
                 showToast("User cancelled.");
             }
         });
