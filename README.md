@@ -1,5 +1,12 @@
 # Onfido Capture SDK for Android: Example app
 
-This is repository contains sample code for an Android application intended to showcase how the [Onfido Android SDK](https://github.com/onfido/onfido-android-sdk) should be used.
+This repository contains code for an Android application intended to showcase the [Onfido Android SDK](https://github.com/onfido/onfido-android-sdk).
 
-In order to use the API (and the SDK) you'll need an Onfido account and an API token that you can get from the settings screen.
+This APK has two launcher apps. One is a demo flow that emulates a banking app, the other is an app that allows you to test different SDK configurations.
+
+You need an Onfido account and API token to use the sample app. Please contact us through our [website](https://onfido.com/signup) to create an Onfido account.
+
+Create a file called `secrets` in the root of the project and place the API token inside it as follows:
+```
+onfido_api_token=YOUR_TOKEN_HERE
+```
