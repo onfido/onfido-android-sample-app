@@ -57,7 +57,7 @@ public class DebugActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         client = OnfidoFactory.create(this).getClient();
-        final OnfidoConfig.Builder builder = OnfidoConfig.builder().withSyncWaitTime(5);
+        final OnfidoConfig.Builder builder = OnfidoConfig.builder();
 
         firstName = (EditText) findViewById(R.id.firstName);
         lastName = (EditText) findViewById(R.id.lastName);
@@ -75,7 +75,7 @@ public class DebugActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(client.createIntent(builder.build()));
+                client.startActivityForResult(DebugActivity.this, 0, builder.build());
             }
         });
 
