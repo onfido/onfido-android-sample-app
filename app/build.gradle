@@ -10,8 +10,8 @@ final ERROR_MESSAGE =   "You have not defined an app key for the Onfido api."
 
 def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
 
-def sdkVersion = '0.2.2'
-def versionCodeNumber = 2
+def sdkVersion = '0.3.0'
+def versionCodeNumber = 3
 
 android {
     compileSdkVersion 23
@@ -23,7 +23,6 @@ android {
         targetSdkVersion 23
         versionCode versionCodeNumber
         versionName "$versionCode-sdk:$sdkVersion"
-        multiDexEnabled true
         injectInStringResources(it, APP_TOKEN_KEY, apiKey)
     }
 
@@ -45,9 +44,27 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:multidex:'
     compile ("com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion")
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     testCompile 'junit:junit:4.12'
+
+
+    /* Integration test dependencies
+    * These dependencies are here just to test the integration of the sdk with app that has them.
+    */
+
+    //this overrides the sdk play services dependency, without the app crashes, because there can only be one version of google play services
+    compile ('com.google.android.gms:play-services-vision:10.0.1')
+
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+    compile 'com.google.android.gms:play-services-analytics:10.0.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
+    compile 'com.google.android.gms:play-services-places:10.0.1'
+    compile 'com.google.firebase:firebase-invites:10.0.1'
+    compile "com.google.firebase:firebase-messaging:10.0.1"
+    compile 'com.google.firebase:firebase-ads:10.0.1'
+    compile 'com.google.firebase:firebase-config:10.0.1'
+    compile 'com.google.firebase:firebase-appindexing:10.0.1'
+    /*END OF Integration test dependencies*/
 }
