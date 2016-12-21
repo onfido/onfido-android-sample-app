@@ -23,7 +23,6 @@ android {
         targetSdkVersion 23
         versionCode versionCodeNumber
         versionName "$versionCode-sdk:$sdkVersion"
-        multiDexEnabled true
         injectInStringResources(it, APP_TOKEN_KEY, apiKey)
     }
 
@@ -45,7 +44,6 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:multidex:'
     compile ("com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion")
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
