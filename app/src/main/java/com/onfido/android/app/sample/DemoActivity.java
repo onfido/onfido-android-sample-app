@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.onfido.android.sdk.capture.ExitCode;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
@@ -48,7 +49,7 @@ public class DemoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void userExited(Applicant applicant, OnfidoAPI onfidoApi, OnfidoConfig config) {
+            public void userExited(ExitCode exitCode, Applicant applicant, OnfidoAPI onfidoApi, OnfidoConfig config) {
                 showToast("User cancelled.");
             }
         });

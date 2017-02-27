@@ -10,8 +10,8 @@ final ERROR_MESSAGE =   "You have not defined an app key for the Onfido api."
 
 def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
 
-def sdkVersion = '0.4.0-rc.3'
-def versionCodeNumber = 5
+def sdkVersion = '0.5.0-rc.1'
+def versionCodeNumber = 6
 
 android {
     compileSdkVersion 23
