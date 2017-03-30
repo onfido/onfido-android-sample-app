@@ -10,8 +10,8 @@ final ERROR_MESSAGE =   "You have not defined an app key for the Onfido api."
 
 def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
 
-def sdkVersion = '0.5.0-rc.1'
-def versionCodeNumber = 6
+def sdkVersion = '0.6.0'
+def versionCodeNumber = 7
 
 android {
     compileSdkVersion 23
@@ -53,6 +53,7 @@ dependencies {
     /* Integration test dependencies
     * These dependencies are here just to test the integration of the sdk with app that has them.
     */
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     //this overrides the sdk play services dependency, without the app crashes, because there can only be one version of google play services
     compile ('com.google.android.gms:play-services-vision:10.0.1')
