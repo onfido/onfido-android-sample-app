@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
             @Override
             public void onClick(View v) {
                 startOnfidoActivity(getTestOnfidoConfigBuilder()
-                        .withShouldCollectDetails(true)
                         .build());
             }
         });
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
             @Override
             public void onClick(View v) {
                 startOnfidoActivity(getTestOnfidoConfigBuilder()
-                        .withShouldCollectDetails(false)
                         .build());
             }
         });
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        client.handleActivityResult(requestCode, resultCode, data, new Onfido.OnfidoResultListener() {
+        client.handleActivityResult(resultCode, data, new Onfido.OnfidoResultListener() {
             @Override
             public void userCompleted(Applicant applicant, OnfidoAPI onfidoAPI, OnfidoConfig onfidoConfig) {
                 startCheck(onfidoConfig, applicant, onfidoAPI);

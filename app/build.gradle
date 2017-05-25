@@ -3,14 +3,14 @@ apply from: "$rootDir/helpers.gradle"
 
 //Api token can be defined as environment variable or in a file
 //Exception message has more specific information where the api token should be placed
-final APP_TOKEN_KEY = 'onfido_api_token'
-final APP_TOKEN_FILE = 'secrets'
+final APP_TOKEN_KEY = 'ONFIDO_API_TOKEN'
+final APP_TOKEN_FILE = 'secrets.properties'
 final APP_TOKEN_ENV_VAR_NAME = 'ONFIDO_API_TOKEN'
 final ERROR_MESSAGE =   "You have not defined an app key for the Onfido api."
 
 def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
 
-def sdkVersion = '0.6.0'
+def sdkVersion = '0.7.1-rc.1'
 def versionCodeNumber = 7
 
 android {

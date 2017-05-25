@@ -42,7 +42,7 @@ public class DemoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        client.handleActivityResult(requestCode, resultCode, data, new Onfido.OnfidoResultListener() {
+        client.handleActivityResult(resultCode, data, new Onfido.OnfidoResultListener() {
             @Override
             public void userCompleted(Applicant applicant, OnfidoAPI onfidoAPI, OnfidoConfig onfidoConfig) {
                 startCheck(onfidoConfig, applicant, onfidoAPI);
@@ -131,6 +131,6 @@ public class DemoActivity extends AppCompatActivity {
 
     private void showErrorMessage(String message){
         closeLoadingScreen();
-        errorDialogFeature.show(message);
+        errorDialogFeature.show(message, null);
     }
 }
