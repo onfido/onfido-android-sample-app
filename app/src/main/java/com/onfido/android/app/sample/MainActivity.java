@@ -46,14 +46,6 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
 
         client = OnfidoFactory.create(this).getClient();
 
-        findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startOnfidoActivity(getTestOnfidoConfigBuilder()
-                        .build());
-            }
-        });
-
         findViewById(R.id.tv_account).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
