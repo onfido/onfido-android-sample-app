@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.L;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
@@ -138,7 +137,6 @@ public class DebugActivity extends AppCompatActivity {
                 new OnfidoAPI.Listener<Applicant>() {
                     @Override
                     public void onSuccess(Applicant applicant) {
-                        L.d(DebugActivity.this, "REQTST", "success!");
                         applicantId.setText(applicant.getId());
                     }
 
@@ -149,7 +147,6 @@ public class DebugActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(ErrorData errorData) {
-                        L.d(DebugActivity.this, "REQTST", "ERROR: " + errorData.getMessage());
                     }
                 }
         );
@@ -174,7 +171,6 @@ public class DebugActivity extends AppCompatActivity {
                 new OnfidoAPI.Listener<DocumentUpload>() {
                     @Override
                     public void onSuccess(DocumentUpload documentUpload) {
-                        L.d(DebugActivity.this, "REQTST", "success! " + documentUpload.getId());
                     }
 
                     @Override
@@ -184,8 +180,6 @@ public class DebugActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(ErrorData errorData) {
-                        String message = errorData == null ? "null error data" : errorData.getMessage();
-                        L.d(DebugActivity.this, "REQTST", "ERROR: " + message);
                     }
                 }
         );
@@ -198,7 +192,7 @@ public class DebugActivity extends AppCompatActivity {
         try {
             length = inputStream.available();
         } catch (IOException e) {
-            L.d("REQTST", "input stream: " + e.getMessage());
+            // empty
         }
 
         ByteArrayOutputStream bufferedOutputStream = new ByteArrayOutputStream();
@@ -209,7 +203,7 @@ public class DebugActivity extends AppCompatActivity {
                 bufferedOutputStream.write(buff, 0, i);
             }
         } catch (IOException e) {
-            L.d("REQTST", "write: " + e.getMessage());
+            // empty
         }
 
         return bufferedOutputStream.toByteArray();
@@ -226,7 +220,6 @@ public class DebugActivity extends AppCompatActivity {
         interactor.check(applicant, Check.Type.EXPRESS, reports, new OnfidoAPI.Listener<Check>() {
             @Override
             public void onSuccess(Check check) {
-                L.d(DebugActivity.this, "success!");
                 checkId.setText(check.getId());
             }
 
@@ -237,8 +230,7 @@ public class DebugActivity extends AppCompatActivity {
 
             @Override
             public void onError(ErrorData errorData) {
-                String message = errorData == null ? "null error data" : errorData.getMessage();
-                L.d(DebugActivity.this, "ERROR: " + message);
+                // empty
             }
         });
     }
@@ -256,7 +248,7 @@ public class DebugActivity extends AppCompatActivity {
         interactor.checkStatus(applicant, check, new OnfidoAPI.Listener<Check>() {
             @Override
             public void onSuccess(Check updated) {
-                L.d(DebugActivity.this, "success! status=" + updated.getStatus());
+                // empty
             }
 
             @Override
@@ -266,8 +258,7 @@ public class DebugActivity extends AppCompatActivity {
 
             @Override
             public void onError(ErrorData errorData) {
-                String message = errorData == null ? "null error data" : errorData.getMessage();
-                L.d(DebugActivity.this, "ERROR: " + message);
+                // empty
             }
         });
     }
