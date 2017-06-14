@@ -6,16 +6,16 @@ apply from: "$rootDir/helpers.gradle"
 final APP_TOKEN_KEY = 'ONFIDO_API_TOKEN'
 final APP_TOKEN_FILE = 'secrets.properties'
 final APP_TOKEN_ENV_VAR_NAME = 'ONFIDO_API_TOKEN'
-final ERROR_MESSAGE =   "You have not defined an app key for the Onfido api."
+final ERROR_MESSAGE = "You have not defined an app key for the Onfido api."
 
 def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
 
-def sdkVersion = '0.7.1'
+def sdkVersion = '0.8.0-rc.3'
 def versionCodeNumber = 7
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '25.0.3'
 
     defaultConfig {
         applicationId "com.onfido.sampleapp"
@@ -38,17 +38,16 @@ android {
 
 repositories {
     mavenLocal()
-    maven { url  "https://dl.bintray.com/onfido/maven" }
+    maven { url "https://dl.bintray.com/onfido/maven" }
     maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile ("com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion")
+    compile "com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion"
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     testCompile 'junit:junit:4.12'
-
 
     /* Integration test dependencies
     * These dependencies are here just to test the integration of the sdk with app that has them.
@@ -56,7 +55,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
     //this overrides the sdk play services dependency, without the app crashes, because there can only be one version of google play services
-    compile ('com.google.android.gms:play-services-vision:10.0.1')
+    compile('com.google.android.gms:play-services-vision:10.0.1')
 
     compile 'com.google.android.gms:play-services-gcm:10.0.1'
     compile 'com.google.android.gms:play-services-analytics:10.0.1'
