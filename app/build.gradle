@@ -4,6 +4,7 @@ apply from: "$rootDir/helpers.gradle"
 //Api token can be defined as environment variable or in a file
 //Exception message has more specific information where the api token should be placed
 final APP_TOKEN_KEY = 'ONFIDO_API_TOKEN'
+final STRING_TOKEN_RES_KEY = 'onfido_api_token'
 final APP_TOKEN_FILE = 'secrets.properties'
 final APP_TOKEN_ENV_VAR_NAME = 'ONFIDO_API_TOKEN'
 final ERROR_MESSAGE = "You have not defined an app key for the Onfido api."
@@ -23,7 +24,7 @@ android {
         targetSdkVersion 23
         versionCode versionCodeNumber
         versionName "$versionCode-sdk:$sdkVersion"
-        injectInStringResources(it, APP_TOKEN_KEY, apiKey)
+        injectInStringResources(it, STRING_TOKEN_RES_KEY, apiKey)
     }
 
     lintOptions {
