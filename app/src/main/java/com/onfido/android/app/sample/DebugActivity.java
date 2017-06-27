@@ -184,9 +184,8 @@ public class DebugActivity extends BaseActivity {
                         // empty
                     }
                 },
-                "Android Sample App",
-                "0."
-        );
+                SOURCE,
+                getVersionCode());
     }
 
     private byte[] getData() {
