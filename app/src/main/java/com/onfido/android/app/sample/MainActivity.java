@@ -17,6 +17,7 @@ import com.onfido.android.sdk.capture.ui.ErrorDialogFeature;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.android.sdk.capture.upload.Captures;
+import com.onfido.android.sdk.capture.utils.OnfidoApiUtil;
 import com.onfido.api.client.OnfidoAPI;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
@@ -80,6 +81,8 @@ public class MainActivity extends BaseActivity implements ErrorDialogFeature.Lis
         config = getTestOnfidoConfigBuilder()
                 .withCustomFlow(flowStepsWithOptions)
                 .build();
+
+        onfidoAPI = OnfidoApiUtil.createOnfidoApiClient(this, config);
 
         findViewById(R.id.tv_custom_flow_options).setOnClickListener(new View.OnClickListener() {
             @Override
