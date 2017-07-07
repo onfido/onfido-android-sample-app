@@ -2,7 +2,6 @@ package com.onfido.android.app.sample;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,10 +31,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-public class DebugActivity extends AppCompatActivity {
+public class DebugActivity extends BaseActivity {
 
     static final String TOKEN = "ONFIDO_API_TOKEN";
-    
+
     private Onfido client;
 
     private EditText firstName;
@@ -146,7 +145,8 @@ public class DebugActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onError(ErrorData errorData) {
+                    public void onError(int errorCode, String message, ErrorData parsedError) {
+
                     }
                 }
         );
@@ -171,18 +171,21 @@ public class DebugActivity extends AppCompatActivity {
                 new OnfidoAPI.Listener<DocumentUpload>() {
                     @Override
                     public void onSuccess(DocumentUpload documentUpload) {
+                        // empty
                     }
 
                     @Override
                     public void onFailure() {
-
+                        // empty
                     }
 
                     @Override
-                    public void onError(ErrorData errorData) {
+                    public void onError(int errorCode, String message, ErrorData parsedError) {
+                        // empty
                     }
-                }
-        );
+                },
+                SOURCE,
+                getVersionCode());
     }
 
     private byte[] getData() {
@@ -229,7 +232,7 @@ public class DebugActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onError(ErrorData errorData) {
+            public void onError(int errorCode, String message, ErrorData parsedError) {
                 // empty
             }
         });
@@ -257,7 +260,7 @@ public class DebugActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onError(ErrorData errorData) {
+            public void onError(int errorCode, String message, ErrorData parsedError) {
                 // empty
             }
         });

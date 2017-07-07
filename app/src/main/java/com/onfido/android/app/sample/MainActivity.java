@@ -16,6 +16,8 @@ import com.onfido.android.sdk.capture.OnfidoFactory;
 import com.onfido.android.sdk.capture.ui.ErrorDialogFeature;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
+import com.onfido.android.sdk.capture.upload.Captures;
+import com.onfido.android.sdk.capture.utils.OnfidoApiUtil;
 import com.onfido.api.client.OnfidoAPI;
 import com.onfido.api.client.data.Applicant;
 import com.onfido.api.client.data.Check;
@@ -26,10 +28,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ErrorDialogFeature.Listener {
+public class MainActivity extends BaseActivity implements ErrorDialogFeature.Listener {
 
     private Onfido client;
     ErrorDialogFeature errorDialogFeature;
+    OnfidoConfig config;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -74,12 +77,17 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
                 FlowStep.CAPTURE_FACE,
                 new MessageScreenStep("Thank you","","Close")
         };
+
+        config = getTestOnfidoConfigBuilder()
+                .withCustomFlow(flowStepsWithOptions)
+                .build();
+
+        onfidoAPI = OnfidoApiUtil.createOnfidoApiClient(this, config);
+
         findViewById(R.id.tv_custom_flow_options).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startOnfidoActivity(getTestOnfidoConfigBuilder()
-                        .withCustomFlow(flowStepsWithOptions)
-                        .build());
+                startOnfidoActivity(config);
             }
         });
     }
@@ -89,12 +97,12 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
         super.onActivityResult(requestCode, resultCode, data);
         client.handleActivityResult(resultCode, data, new Onfido.OnfidoResultListener() {
             @Override
-            public void userCompleted(Applicant applicant, OnfidoAPI onfidoAPI, OnfidoConfig onfidoConfig) {
-                startCheck(onfidoConfig, applicant, onfidoAPI);
+            public void userCompleted(Applicant applicant, Captures captures) {
+                startCheck(config, applicant, onfidoAPI);
             }
 
             @Override
-            public void userExited(ExitCode exitCode, Applicant applicant, OnfidoAPI onfidoApi, OnfidoConfig config) {
+            public void userExited(ExitCode exitCode, Applicant applicant) {
                 showToast("User cancelled.");
             }
         });
@@ -131,8 +139,8 @@ public class MainActivity extends AppCompatActivity implements ErrorDialogFeatur
                     }
 
                     @Override
-                    public void onError(ErrorData errorData) {
-                        showErrorMessage(errorData.getMessage());
+                    public void onError(int errorCode, String message, ErrorData parsedError) {
+                        showErrorMessage(parsedError.getMessage());
                     }
                 }
         );
