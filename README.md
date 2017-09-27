@@ -6,7 +6,7 @@ This APK has two launcher apps. One is a demo flow that emulates a banking app, 
 
 You need an Onfido account and API token to use the sample app. Please contact us through our [website](https://onfido.com/signup) to create an Onfido account.
 
-Create a file called `secrets` in the root of the project and place the API token inside it as follows:
+Create a file called `secrets.properties` in the root of the project and place the API token inside it as follows:
 ```
-onfido_api_token=YOUR_TOKEN_HERE
+ONFIDO_API_TOKEN=YOUR_TOKEN_HERE
 ```
