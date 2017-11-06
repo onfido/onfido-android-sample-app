@@ -2,28 +2,17 @@ package com.onfido.android.app.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
 import com.onfido.android.sdk.capture.ExitCode;
 import com.onfido.android.sdk.capture.Onfido;
-import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
 import com.onfido.android.sdk.capture.ui.ErrorDialogFeature;
-import com.onfido.android.sdk.capture.ui.LoadingFragment;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.android.sdk.capture.upload.Captures;
-import com.onfido.android.sdk.capture.utils.OnfidoApiUtil;
-import com.onfido.api.client.OnfidoAPI;
 import com.onfido.api.client.data.Applicant;
-import com.onfido.api.client.data.Check;
-import com.onfido.api.client.data.ErrorData;
-import com.onfido.api.client.data.Report;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DemoActivity extends BaseActivity {
 
@@ -47,7 +36,7 @@ public class DemoActivity extends BaseActivity {
         client.handleActivityResult(resultCode, data, new Onfido.OnfidoResultListener() {
             @Override
             public void userCompleted(Applicant applicant, Captures captures) {
-                startCheck(applicant, onfidoAPI);
+                startCheck(applicant);
             }
 
             @Override
@@ -61,38 +50,10 @@ public class DemoActivity extends BaseActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void startCheck(Applicant applicant, OnfidoAPI onfidoAPI) {
-        final List<Report> currentReports = new ArrayList<>();
-        currentReports.add(new Report(Report.Type.DOCUMENT));
-        currentReports.add(new Report(Report.Type.IDENTITY));
+    private void startCheck(Applicant applicant) {
+        //Call your back end to initiate the check
 
-        setLoadingFragment(getString(com.onfido.android.sdk.capture.R.string.message_loading_identify_verification));
-
-        onfidoAPI.check(applicant, Check.Type.EXPRESS, currentReports, new OnfidoAPI.Listener<Check>() {
-                    @Override
-                    public void onSuccess(Check check) {
-                        completedCheck(check);
-                    }
-
-                    @Override
-                    public void onFailure() {
-                        showErrorMessage(getString(com.onfido.android.sdk.capture.R.string.error_connection_message));
-                    }
-
-                    @Override
-                    public void onError(int errorCode, String message, ErrorData parsedError) {
-                        showErrorMessage(parsedError.getMessage());
-                    }
-                }
-        );
-    }
-
-    private void setLoadingFragment(String message) {
-        ActivityUtils.setFragment(this, LoadingFragment.createInstance(message));
-    }
-
-    private void closeLoadingScreen() {
-        setWelcomeScreen();
+        completedCheck();
     }
 
     private void setWelcomeScreen() {
@@ -100,16 +61,11 @@ public class DemoActivity extends BaseActivity {
 
         final FlowStep[] flowStepsWithOptions = new FlowStep[]{
                 new MessageScreenStep("Welcome", "In the following steps you will be asked to perform a verification check", "Start"),
-                //FlowStep.APPLICANT_CREATE,
                 FlowStep.CAPTURE_DOCUMENT,
                 FlowStep.MESSAGE_FACE_VERIFICATION,
                 FlowStep.CAPTURE_FACE,
                 new MessageScreenStep("Thank you", "We will use your captured document and face to perform a verification check", "Start Check")
         };
-
-        onfidoAPI = OnfidoApiUtil.createOnfidoApiClient(this, ActivityUtils.getTestOnfidoConfigBuilder()
-                .withCustomFlow(flowStepsWithOptions)
-                .build());
 
         findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,21 +78,7 @@ public class DemoActivity extends BaseActivity {
         });
     }
 
-    private void completedCheck(Check check) {
+    private void completedCheck() {
         startActivity(new Intent().setClass(DemoActivity.this, FinalActivity.class));
-        mCloseLoadingScreenOnExit = true;
-    }
-
-    private boolean mCloseLoadingScreenOnExit = false;
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mCloseLoadingScreenOnExit) closeLoadingScreen();
-    }
-
-    private void showErrorMessage(String message) {
-        closeLoadingScreen();
-        errorDialogFeature.show(message, null);
     }
 }
