@@ -8,25 +8,19 @@ import android.widget.Toast;
 import com.onfido.android.sdk.capture.ExitCode;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoFactory;
-import com.onfido.android.sdk.capture.ui.ErrorDialogFeature;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.android.sdk.capture.upload.Captures;
 import com.onfido.api.client.data.Applicant;
 
-public class DemoActivity extends BaseActivity {
+public class MainActivity extends BaseActivity {
 
     private Onfido client;
-    private ErrorDialogFeature errorDialogFeature;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = OnfidoFactory.create(this).getClient();
-
-        errorDialogFeature = new ErrorDialogFeature();
-        errorDialogFeature.attach(this);
-
         setWelcomeScreen();
     }
 
@@ -57,7 +51,7 @@ public class DemoActivity extends BaseActivity {
     }
 
     private void setWelcomeScreen() {
-        setContentView(R.layout.demo_main);
+        setContentView(R.layout.main);
 
         final FlowStep[] flowStepsWithOptions = new FlowStep[]{
                 new MessageScreenStep("Welcome", "In the following steps you will be asked to perform a verification check", "Start"),
@@ -70,7 +64,7 @@ public class DemoActivity extends BaseActivity {
         findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.startActivityForResult(DemoActivity.this, 1,
+                client.startActivityForResult(MainActivity.this, 1,
                         ActivityUtils.getTestOnfidoConfigBuilder()
                                 .withCustomFlow(flowStepsWithOptions)
                                 .build());
@@ -79,6 +73,6 @@ public class DemoActivity extends BaseActivity {
     }
 
     private void completedCheck() {
-        startActivity(new Intent().setClass(DemoActivity.this, FinalActivity.class));
+        startActivity(new Intent().setClass(MainActivity.this, FinalActivity.class));
     }
 }
