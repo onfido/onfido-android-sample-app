@@ -40,7 +40,7 @@ public class FinalActivity extends AppCompatActivity implements NextActionListen
 
     public void showFinalScreen() {
         Fragment fragment = MessageFragment.createInstance(
-                getString(R.string.message_title_finished),
+                "Verification completed",
                 getString(R.string.welcome_bank_account)
         );
         setFragment(fragment);
@@ -54,6 +54,11 @@ public class FinalActivity extends AppCompatActivity implements NextActionListen
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(com.onfido.android.sdk.capture.R.id.fl_content, fragment);
         ft.commitAllowingStateLoss();
+    }
+
+    @Override
+    public void onPreviousClicked() {
+
     }
 
     @Override

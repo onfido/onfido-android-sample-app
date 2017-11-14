@@ -56,7 +56,6 @@ public class MainActivity extends BaseActivity {
         final FlowStep[] flowStepsWithOptions = new FlowStep[]{
                 new MessageScreenStep("Welcome", "In the following steps you will be asked to perform a verification check", "Start"),
                 FlowStep.CAPTURE_DOCUMENT,
-                FlowStep.MESSAGE_FACE_VERIFICATION,
                 FlowStep.CAPTURE_FACE,
                 new MessageScreenStep("Thank you", "We will use your captured document and face to perform a verification check", "Start Check")
         };
