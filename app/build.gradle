@@ -72,5 +72,11 @@ dependencies {
     compile 'com.google.firebase:firebase-appindexing:10.0.1'
     /*END OF Integration test dependencies*/
 
+    compile ('com.amitshekhar.android:android-networking:1.0.0', {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+        exclude group: 'com.squareup.okio', module: 'okio'
+        exclude group: 'com.google.code.gson', module: 'gson'
+    })
+
     compile 'com.android.support:multidex:1.0.1'
 }
