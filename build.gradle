@@ -1,11 +1,38 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+
+    ext {
+        build_tools_version = "26.0.3"
+        gradle_tools_version = "3.0.1"
+
+        min_sdk_version = 16
+        compile_sdk_version = 26
+
+        target_sdk_version = compile_sdk_version
+
+        support_lib_version = "26.1.0"
+        play_services_version = "11.6.2"
+        glide_version = "3.7.0"
+
+        onfido_sdk_version = "2.0.0"
+
+        junit_version = "4.12"
+
+        test_runner_version = "1.0.1"
+        espresso_version = "3.0.1"
+        mockito_version = "2.12.0"
+
+        multidex_version = "1.0.2"
+    }
+
+
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath "com.android.tools.build:gradle:$gradle_tools_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -16,6 +43,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
     }
 }
 
