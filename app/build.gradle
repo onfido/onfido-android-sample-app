@@ -11,19 +11,18 @@ final ERROR_MESSAGE = "You have not defined an app key for the Onfido api."
 
 def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
 
-def sdkVersion = '2.0.0'
 def versionCodeNumber = 7
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion compile_sdk_version
+    buildToolsVersion build_tools_version
 
     defaultConfig {
         applicationId "com.onfido.sampleapp"
-        minSdkVersion 16
-        targetSdkVersion 25
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
         versionCode versionCodeNumber
-        versionName "$versionCode-sdk:$sdkVersion"
+        versionName "$versionCode-sdk:$onfido_sdk_version"
         injectInStringResources(it, STRING_TOKEN_RES_KEY, apiKey)
         multiDexEnabled true
     }
@@ -46,30 +45,30 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile "com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion"
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    testCompile 'junit:junit:4.12'
+    compile "com.onfido.sdk.capture:onfido-capture-sdk:$onfido_sdk_version"
+    compile "com.android.support:appcompat-v7:$support_lib_version"
+    compile "com.android.support:design:$support_lib_version"
+    testCompile "junit:junit:$junit_version"
 
     /* Integration test dependencies
     * These dependencies are here just to test the integration of the sdk with app that has them.
     */
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile "com.github.bumptech.glide:glide:$glide_version"
 
     //this overrides the sdk play services dependency, without the app crashes, because there can only be one version of google play services
-    compile('com.google.android.gms:play-services-vision:10.0.1')
-    compile 'com.google.android.gms:play-services-gcm:10.0.1'
-    compile 'com.google.android.gms:play-services-analytics:10.0.1'
-    compile 'com.google.android.gms:play-services-analytics-impl:10.0.1'
-    compile 'com.google.android.gms:play-services-location:10.0.1'
-    compile 'com.google.android.gms:play-services-places:10.0.1'
-    compile 'com.google.android.gms:play-services-ads-lite:10.0.1'
-    compile 'com.google.firebase:firebase-invites:10.0.1'
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
-    compile 'com.google.firebase:firebase-ads:10.0.1'
-    compile 'com.google.firebase:firebase-config:10.0.1'
-    compile 'com.google.firebase:firebase-appindexing:10.0.1'
+    compile("com.google.android.gms:play-services-vision:$play_services_version")
+    compile "com.google.android.gms:play-services-gcm:$play_services_version"
+    compile "com.google.android.gms:play-services-analytics:$play_services_version"
+    compile "com.google.android.gms:play-services-analytics-impl:$play_services_version"
+    compile "com.google.android.gms:play-services-location:$play_services_version"
+    compile "com.google.android.gms:play-services-places:$play_services_version"
+    compile "com.google.android.gms:play-services-ads-lite:$play_services_version"
+    compile "com.google.firebase:firebase-invites:$play_services_version"
+    compile "com.google.firebase:firebase-messaging:$play_services_version"
+    compile "com.google.firebase:firebase-ads:$play_services_version"
+    compile "com.google.firebase:firebase-config:$play_services_version"
+    compile "com.google.firebase:firebase-appindexing:$play_services_version"
     /*END OF Integration test dependencies*/
 
-    compile 'com.android.support:multidex:1.0.1'
+    compile "com.android.support:multidex:$multidex_version"
 }
