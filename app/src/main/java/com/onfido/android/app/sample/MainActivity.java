@@ -15,7 +15,6 @@ import com.onfido.android.sdk.capture.OnfidoFactory;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.android.sdk.capture.upload.Captures;
-import com.onfido.android.sdk.capture.utils.OnfidoApiUtil;
 import com.onfido.api.client.data.Applicant;
 
 import org.json.JSONException;
@@ -89,8 +88,6 @@ public class MainActivity extends BaseActivity {
                     }
 
                     OnfidoConfig onfidoConfig = onfidoConfigBuilder.build();
-                    onfidoAPI = OnfidoApiUtil.createOnfidoApiClient(MainActivity.this, onfidoConfig);
-
                     client.startActivityForResult(MainActivity.this, 1, onfidoConfig);
                 } catch (JSONException e) {
                     e.printStackTrace();
