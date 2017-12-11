@@ -1,6 +1,5 @@
 package com.onfido.android.app.sample;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -25,7 +24,6 @@ import org.json.JSONObject;
 public class MainActivity extends BaseActivity {
 
     private Onfido client;
-    private Activity activity = this;
     private String applicantId = "";
 
     @Override
@@ -91,9 +89,9 @@ public class MainActivity extends BaseActivity {
                     }
 
                     OnfidoConfig onfidoConfig = onfidoConfigBuilder.build();
-                    onfidoAPI = OnfidoApiUtil.createOnfidoApiClient(activity, onfidoConfig);
+                    onfidoAPI = OnfidoApiUtil.createOnfidoApiClient(MainActivity.this, onfidoConfig);
 
-                    client.startActivityForResult(activity, 1, onfidoConfig);
+                    client.startActivityForResult(MainActivity.this, 1, onfidoConfig);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
