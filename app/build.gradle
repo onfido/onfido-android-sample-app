@@ -11,8 +11,8 @@ final ERROR_MESSAGE = "You have not defined an app key for the Onfido api."
 
 def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
 
-def sdkVersion = '2.0.0'
-def versionCodeNumber = 7
+def sdkVersion = '2.1.0'
+def versionCodeNumber = 8
 
 android {
     compileSdkVersion 25
@@ -70,6 +70,12 @@ dependencies {
     compile 'com.google.firebase:firebase-config:10.0.1'
     compile 'com.google.firebase:firebase-appindexing:10.0.1'
     /*END OF Integration test dependencies*/
+
+    compile ('com.amitshekhar.android:android-networking:1.0.0', {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+        exclude group: 'com.squareup.okio', module: 'okio'
+        exclude group: 'com.google.code.gson', module: 'gson'
+    })
 
     compile 'com.android.support:multidex:1.0.1'
 }

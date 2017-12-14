@@ -5,13 +5,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.onfido.android.sdk.capture.ExitCode;
 import com.onfido.android.sdk.capture.Onfido;
+import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.android.sdk.capture.upload.Captures;
 import com.onfido.api.client.data.Applicant;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends BaseActivity {
 
@@ -46,7 +53,6 @@ public class MainActivity extends BaseActivity {
 
     private void startCheck(Applicant applicant) {
         //Call your back end to initiate the check
-
         completedCheck();
     }
 
@@ -63,12 +69,53 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.startActivityForResult(MainActivity.this, 1,
-                        ActivityUtils.getTestOnfidoConfigBuilder()
-                                .withCustomFlow(flowStepsWithOptions)
-                                .build());
+                startFlow(flowStepsWithOptions);
             }
         });
+    }
+
+    private void startFlow(final FlowStep[] flowSteps) {
+        createApplicant(new JSONObjectRequestListener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String applicantId = response.getString("id");
+                    OnfidoConfig.Builder onfidoConfigBuilder = OnfidoConfig.builder().withApplicant(applicantId);
+
+                    if (flowSteps != null) {
+                        onfidoConfigBuilder.withCustomFlow(flowSteps);
+                    }
+
+                    OnfidoConfig onfidoConfig = onfidoConfigBuilder.build();
+                    client.startActivityForResult(MainActivity.this, 1, onfidoConfig);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(ANError anError) {
+            }
+        });
+    }
+
+    private void createApplicant(JSONObjectRequestListener listener) {
+        try {
+            String token = getString(R.string.onfido_api_token);
+            final JSONObject applicant = new JSONObject();
+            applicant.put("first_name", "Theresa");
+            applicant.put("last_name", "May");
+
+            AndroidNetworking.post("https://api.onfido.com/v2/applicants")
+                    .addJSONObjectBody(applicant)
+                    .addHeaders("Accept", "application/json")
+                    .addHeaders("Authorization", "Token token=" + token)
+                    .build()
+                    .getAsJSONObject(listener);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void completedCheck() {
