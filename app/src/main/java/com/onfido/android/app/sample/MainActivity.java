@@ -23,7 +23,6 @@ import org.json.JSONObject;
 public class MainActivity extends BaseActivity {
 
     private Onfido client;
-    private String applicantId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +79,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    applicantId = response.getString("id");
+                    String applicantId = response.getString("id");
                     OnfidoConfig.Builder onfidoConfigBuilder = OnfidoConfig.builder().withApplicant(applicantId);
 
                     if (flowSteps != null) {
