@@ -12,6 +12,7 @@ import com.onfido.android.sdk.capture.ExitCode;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.android.sdk.capture.errors.UnknownException;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.android.sdk.capture.upload.Captures;
@@ -43,6 +44,11 @@ public class MainActivity extends BaseActivity {
             @Override
             public void userExited(ExitCode exitCode, Applicant applicant) {
                 showToast("User cancelled.");
+            }
+
+            @Override
+            public void onError(UnknownException unknownException, Applicant applicant) {
+                showToast("Unknown error");
             }
         });
     }
