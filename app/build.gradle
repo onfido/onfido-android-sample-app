@@ -15,13 +15,12 @@ def sdkVersion = '2.4.0'
 def versionCodeNumber = 11
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 27
 
     defaultConfig {
         applicationId "com.onfido.sampleapp"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode versionCodeNumber
         versionName "$versionCode-sdk:$sdkVersion"
         injectInStringResources(it, STRING_TOKEN_RES_KEY, apiKey)
@@ -44,13 +43,13 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile "com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion"
-    compile 'com.android.support:appcompat-v7:25.4.0'
-    compile 'com.android.support:design:25.4.0'
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion"
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
+    testImplementation 'junit:junit:4.12'
 
-    compile ('com.amitshekhar.android:android-networking:1.0.0', {
+    implementation ('com.amitshekhar.android:android-networking:1.0.0', {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
         exclude group: 'com.squareup.okio', module: 'okio'
         exclude group: 'com.google.code.gson', module: 'gson'
