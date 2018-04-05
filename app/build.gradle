@@ -11,7 +11,7 @@ final ERROR_MESSAGE = "You have not defined an app key for the Onfido api."
 
 def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
 
-def sdkVersion = '2.4.0'
+def sdkVersion = '3.0.0'
 def versionCodeNumber = 11
 
 android {
@@ -54,4 +54,9 @@ dependencies {
         exclude group: 'com.squareup.okio', module: 'okio'
         exclude group: 'com.google.code.gson', module: 'gson'
     })
+
+    // only required to support TLSv1.2 for devices with Android API lower than 5.x
+    implementation ('com.google.android.gms:play-services-base:11.8.0') {
+        exclude group: 'com.android.support' // to avoid conflicts with your current support library
+    }
 }
