@@ -30,7 +30,7 @@
     </style>
 
     <style name="OnboardingItemText" parent="OnboardingItem">
-        <item name="android:textColor">@color/dusk_blue</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:textSize">@dimen/fs_normal</item>
     </style>
 
