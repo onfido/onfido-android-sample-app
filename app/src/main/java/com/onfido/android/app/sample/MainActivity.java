@@ -9,6 +9,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.onfido.android.sdk.capture.ExitCode;
+import com.onfido.android.sdk.capture.errors.OnfidoException;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
@@ -35,7 +36,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        client.handleActivityResult(resultCode, data, new Onfido.OnfidoResultListener() {
+        Onfido.OnfidoResultListener listener = new Onfido.OnfidoResultListener() {
             @Override
             public void userCompleted(Applicant applicant, Captures captures) {
                 startCheck(applicant);
@@ -51,7 +52,8 @@ public class MainActivity extends BaseActivity {
                 e.printStackTrace();
                 showToast("Unknown error");
             }
-        });
+        };
+        client.handleActivityResult(resultCode, data, listener);
     }
 
     private void showToast(String message) {
