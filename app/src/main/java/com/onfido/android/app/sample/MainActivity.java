@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Onfido.OnfidoResultListener listener = new Onfido.OnfidoResultListener() {
+        client.handleActivityResult(resultCode, data, new Onfido.OnfidoResultListener() {
             @Override
             public void userCompleted(Applicant applicant, Captures captures) {
                 startCheck(applicant);
@@ -52,8 +52,7 @@ public class MainActivity extends BaseActivity {
                 e.printStackTrace();
                 showToast("Unknown error");
             }
-        };
-        client.handleActivityResult(resultCode, data, listener);
+        });
     }
 
     private void showToast(String message) {
