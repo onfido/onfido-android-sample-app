@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply from: "$rootDir/helpers.gradle"
-apply plugin: 'com.getkeepsafe.dexcount'
 
 //Api token can be defined as environment variable or in a file
 //Exception message has more specific information where the api token should be placed
@@ -14,31 +13,6 @@ def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_T
 
 def sdkVersion = '4.0.0'
 def versionCodeNumber = 400
-
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
-    }
-}
-
-dexcount {
-    format = "list"
-    includeClasses = false
-    includeFieldCount = true
-    includeTotalMethodCount = true
-    orderByMethodCount = false
-    verbose = false
-    maxTreeDepth = Integer.MAX_VALUE
-    teamCityIntegration = false
-    enableForInstantRun = false
-    teamCitySlug = null
-    runOnEachAssemble = true
-    maxMethodCount = 120000
-}
 
 android {
     compileSdkVersion 27
