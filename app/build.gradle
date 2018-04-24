@@ -41,16 +41,7 @@ dexcount {
 }
 
 android {
-    signingConfigs {
-        release {
-            keyAlias 'release'
-            keyPassword 'release'
-            storeFile file('/Users/sergiomoura/development/release.jks')
-            storePassword 'release'
-        }
-    }
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.onfido.sampleapp"
         minSdkVersion 16
@@ -69,7 +60,6 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
