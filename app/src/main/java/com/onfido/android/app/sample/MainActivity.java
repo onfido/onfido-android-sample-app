@@ -13,6 +13,7 @@ import com.onfido.android.sdk.capture.errors.OnfidoException;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
+import com.onfido.android.sdk.capture.ui.BaseActivity;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.android.sdk.capture.upload.Captures;
@@ -126,6 +127,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void completedCheck() {
-        startActivity(new Intent().setClass(MainActivity.this, FinalActivity.class));
+        //
     }
 }
