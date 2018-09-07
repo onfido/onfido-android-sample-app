@@ -21,10 +21,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".FinalActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <meta-data
             android:name="onfido_api_token"
             android:value="@string/onfido_api_token" />
