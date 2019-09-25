@@ -5,24 +5,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.onfido.android.sdk.capture.ExitCode;
-import com.onfido.android.sdk.capture.errors.OnfidoException;
 import com.onfido.android.sdk.capture.Onfido;
 import com.onfido.android.sdk.capture.OnfidoConfig;
 import com.onfido.android.sdk.capture.OnfidoFactory;
-import com.onfido.android.sdk.capture.ui.BaseActivity;
+import com.onfido.android.sdk.capture.errors.OnfidoException;
 import com.onfido.android.sdk.capture.ui.options.FlowStep;
 import com.onfido.android.sdk.capture.ui.options.MessageScreenStep;
 import com.onfido.android.sdk.capture.upload.Captures;
-import com.onfido.api.client.data.Applicant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends AppCompatActivity {
 
     private Onfido client;
 
@@ -34,30 +34,21 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public OnfidoConfig getOnfidoConfig() {
-        return null;
-    }
-
-    @Override
-    public void onStopDuringExitWhenSentToBackgroundMode() {
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         client.handleActivityResult(resultCode, data, new Onfido.OnfidoResultListener() {
             @Override
-            public void userCompleted(Applicant applicant, Captures captures) {
-                startCheck(applicant);
-            }
-
-            @Override
-            public void userExited(ExitCode exitCode, Applicant applicant) {
+            public void userExited(ExitCode exitCode) {
                 showToast("User cancelled.");
             }
 
             @Override
-            public void onError(OnfidoException e, Applicant applicant) {
+            public void userCompleted(Captures captures) {
+                startCheck(captures);
+            }
+
+            @Override
+            public void onError(OnfidoException e) {
                 e.printStackTrace();
                 showToast("Unknown error");
             }
@@ -68,7 +59,7 @@ public class MainActivity extends BaseActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void startCheck(Applicant applicant) {
+    private void startCheck(Captures captures) {
         //Call your back end to initiate the check
         completedCheck();
     }
@@ -97,7 +88,7 @@ public class MainActivity extends BaseActivity {
             public void onResponse(JSONObject response) {
                 try {
                     String applicantId = response.getString("id");
-                    OnfidoConfig.Builder onfidoConfigBuilder = OnfidoConfig.builder().withApplicant(applicantId);
+                    OnfidoConfig.Builder onfidoConfigBuilder = OnfidoConfig.builder(MainActivity.this).withApplicant(applicantId);
 
                     if (flowSteps != null) {
                         onfidoConfigBuilder.withCustomFlow(flowSteps);
