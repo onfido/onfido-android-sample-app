@@ -20,10 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="onfido_api_token"
-            android:value="@string/onfido_api_token" />
     </application>
 
 </manifest>
