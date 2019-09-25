@@ -6,6 +6,7 @@
 
     <application xmlns:tools="http://schemas.android.com/tools"
         android:allowBackup="true"
+        android:name="androidx.multidex.MultiDexApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
