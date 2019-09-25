@@ -11,14 +11,15 @@ android {
         targetSdkVersion 29
         versionCode versionCodeNumber
         versionName "$versionCode-sdk:$sdkVersion"
+        multiDexEnabled true
     }
 
     lintOptions {
         abortOnError false
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         release {
@@ -46,6 +47,7 @@ dependencies {
     implementation "com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.android.support:multidex:1.0.3'
     testImplementation 'junit:junit:4.12'
 
     // only required to support TLSv1.2 for devices with Android API lower than 5.x
