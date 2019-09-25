@@ -34,6 +34,15 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public OnfidoConfig getOnfidoConfig() {
+        return null;
+    }
+
+    @Override
+    public void onStopDuringExitWhenSentToBackgroundMode() {
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         client.handleActivityResult(resultCode, data, new Onfido.OnfidoResultListener() {
