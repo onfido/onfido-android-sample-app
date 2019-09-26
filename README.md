@@ -2,11 +2,6 @@
 
 This repository contains code for an Android application intended to showcase the [Onfido Android SDK](https://github.com/onfido/onfido-android-sdk).
 
-This APK has two launcher apps. One is a demo flow that emulates a banking app, the other is an app that allows you to test different SDK configurations.
+Demo flow emulates a banking app, please don't forget to update `sdk token` in MainActivity to be able to complete flow
 
-You need an Onfido account and API token to use the sample app. Please contact us through our [website](https://onfido.com/signup) to create an Onfido account.
-
-Create a file called `secrets.properties` in the root of the project and place the API token inside it as follows:
-```
-ONFIDO_API_TOKEN=YOUR_TOKEN_HERE
-```
+You need an Onfido account to use the sample app. Please contact us through our [website](https://onfido.com/signup) to create an Onfido account.

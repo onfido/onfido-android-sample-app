@@ -1,35 +1,25 @@
 apply plugin: 'com.android.application'
-apply from: "$rootDir/helpers.gradle"
 
-//Api token can be defined as environment variable or in a file
-//Exception message has more specific information where the api token should be placed
-final APP_TOKEN_KEY = 'ONFIDO_API_TOKEN'
-final STRING_TOKEN_RES_KEY = 'onfido_api_token'
-final APP_TOKEN_FILE = 'secrets.properties'
-final APP_TOKEN_ENV_VAR_NAME = 'ONFIDO_API_TOKEN'
-final ERROR_MESSAGE = "You have not defined an app key for the Onfido api."
-
-def apiKey = getValueFromFileOrEnv(APP_TOKEN_ENV_VAR_NAME, APP_TOKEN_FILE, APP_TOKEN_KEY, ERROR_MESSAGE)
-
-def sdkVersion = '4.5.0'
-def versionCodeNumber = 440
+def sdkVersion = '5.0.1'
+def versionCodeNumber = 501
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.onfido.sampleapp"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 29
         versionCode versionCodeNumber
         versionName "$versionCode-sdk:$sdkVersion"
-        injectInStringResources(it, STRING_TOKEN_RES_KEY, apiKey)
+        multiDexEnabled true
     }
+
     lintOptions {
         abortOnError false
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         release {
@@ -55,18 +45,13 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.onfido.sdk.capture:onfido-capture-sdk:$sdkVersion"
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
     testImplementation 'junit:junit:4.12'
 
-    implementation ('com.amitshekhar.android:android-networking:1.0.0', {
-        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
-        exclude group: 'com.squareup.okio', module: 'okio'
-        exclude group: 'com.google.code.gson', module: 'gson'
-    })
-
     // only required to support TLSv1.2 for devices with Android API lower than 5.x
-    implementation ('com.google.android.gms:play-services-base:11.8.0') {
+    implementation('com.google.android.gms:play-services-base:11.8.0') {
         exclude group: 'com.android.support' // to avoid conflicts with your current support library
     }
 }
